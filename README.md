@@ -1,61 +1,134 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# AutoRentix
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+AutoRentix é um sistema completo para aluguer de viaturas desenvolvido em Laravel (backend) com uma interface frontend em Vue.js (opcional). O projeto inclui funcionalidades de gestão de viaturas, reservas, pagamentos, autenticação de utilizadores e administração geral.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+****ESTE PROJECTO FOI DESENVOLVIDO NO ÂMBITO DA UC "INTEGRAÇÃO DE SISTEMAS" DO CURSO DE SOFTWARE DEVELOPER DO CESAE DIGITAL - 2025****
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Índice
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- [Descrição](#descrição)
+- [Funcionalidades](#funcionalidades)
+- [Tecnologias Utilizadas](#tecnologias-utilizadas)
+- [Estrutura do Projeto](#estrutura-do-projeto)
+- [Modelos e Tabelas](#modelos-e-tabelas)
+- [Controllers](#controllers)
+- [Factories e Seeders](#factories-e-seeders)
+- [Configuração e Instalação](#configuração-e-instalação)
+- [Desenvolvedor](#desenvolvedor)
+- [Licença](#licença)
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Descrição
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+AutoRentix é uma aplicação que permite gerir um catálogo de viaturas para aluguer, permitindo a criação, edição e eliminação de bens locáveis (viaturas), gestão das suas características, localização, marca e tipo, além de gerir reservas feitas por utilizadores, respetivos pagamentos e estado de disponibilidade. 
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+O sistema foi pensado para ser modular, escalável e seguro.
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Funcionalidades
 
-### Premium Partners
+- **Gestão de Viaturas:** criação, edição, listagem e eliminação.
+- **Gestão de Características:** definir atributos dos bens locáveis.
+- **Gestão de Localizações e Marcas.**
+- **Gestão de Tipos de Bens.**
+- **Sistema de Reservas:** utilizadores podem reservar viaturas.
+- **Pagamentos:** gestão de pagamentos associados às reservas.
+- **Autenticação e Gestão de Utilizadores.**
+- **API RESTful completa** para integração com frontend ou apps móveis.
+- **Validação robusta e segurança aplicada a todas as operações.**
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+---
 
-## Contributing
+## Tecnologias Utilizadas
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- **Backend:** Laravel (PHP)
+- **Base de Dados:** MySQL
+- **Frontend:** Vue.js (planeado/optional)
+- **Autenticação:** Laravel Sanctum (ou padrão Laravel Auth)
+- **Validação:** Laravel Form Requests / Validator
+- **Outros:** Composer, Artisan commands
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Estrutura do Projeto
 
-## Security Vulnerabilities
+- **app/Models:** Modelos Eloquent para as entidades.
+- **app/Http/Controllers:** Controllers RESTful com métodos CRUD.
+- **database/migrations:** Scripts para criação das tabelas.
+- **database/factories:** Factories para criação de dados fictícios.
+- **database/seeders:** Seeders para popular a base de dados.
+- **routes/api.php:** Rotas API para consumo do frontend.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+## Modelos e Tabelas
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- **BemLocavel:** Representa as viaturas para aluguer, relacionadas com Marca, TipoBem, Localizacao e Caracteristicas.
+- **Caracteristica:** Características ou atributos dos bens.
+- **Localizacao:** Localizações dos bens locáveis.
+- **Marca:** Marcas dos bens.
+- **TipoBem:** Tipos ou categorias de bens.
+- **Reserva:** Reservas feitas pelos utilizadores.
+- **Pagamento:** Pagamentos associados a reservas.
+- **User:** Utilizadores do sistema.
+
+---
+
+## Controllers
+
+Controllers RESTful implementados para todas as entidades:
+
+- BemLocavelController
+- CaracteristicaController
+- LocalizacaoController
+- MarcaController
+- TipoBemController
+- ReservaController
+- PagamentoController
+- UserController
+
+Cada controller suporta os métodos padrão:
+
+- index (listar)
+- store (criar)
+- show (mostrar detalhe)
+- update (atualizar)
+- destroy (eliminar)
+
+---
+
+## Factories e Seeders
+
+- Factories para gerar dados falsos para teste.
+- Seeders para popular tabelas iniciais como Marcas, Tipos, Características.
+- Permite testes e desenvolvimento rápido.
+
+---
+
+## Configuração e Instalação
+
+1. Clone o repositório:
+   ```bash
+   git clone https://github.com/usuario/autorentix.git
+   cd autorentix
+
+## Desenvolvedor
+
+Responsável pelo projeto completo:
+
+- Backend  
+- Frontend  
+- Segurança  
+- UI Design  
+
+Projeto desenvolvido por Angela Peixoto.
+
+---
+
+## Licença
+
+Este projeto está licenciado sob a MIT License - consulte o ficheiro [LICENSE](LICENSE) para detalhes.
