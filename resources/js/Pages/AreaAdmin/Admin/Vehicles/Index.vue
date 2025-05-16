@@ -20,9 +20,9 @@
           <td class="px-4 py-2 border border-gray-300">{{ bem.cor }}</td>
           <td class="px-4 py-2 border border-gray-300">{{ bem.preco_diario.toFixed(2) }}</td>
           <td class="px-4 py-2 border border-gray-300">
-            <inertia-link :href="route('admin.vehicles.edit', bem.id)" class="mr-2 text-blue-600 hover:underline">
+            <Link :href="route('admin.vehicles.edit', bem.id)" class="mr-2 text-blue-600 hover:underline">
               Editar
-            </inertia-link>
+            </Link>
             <button @click="deleteVehicle(bem.id)" class="text-red-600 hover:underline">
               Eliminar
             </button>

@@ -16,6 +16,14 @@
     <h3>Localização</h3>
     <p>{{ bem.localizacao?.cidade || 'N/D' }} - {{ bem.localizacao?.filial || 'N/D' }}</p>
   </div>
+   <div>
+    <ul>
+      <li v-for="bem in bens" :key="bem.id">
+        Modelo: {{ bem.modelo }} -
+        Preço Diário: {{ typeof bem.preco_diario === 'number' ? bem.preco_diario.toFixed(2) : 'N/D' }} €
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script setup>

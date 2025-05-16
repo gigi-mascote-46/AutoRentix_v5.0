@@ -9,15 +9,20 @@ use App\Http\Controllers\Admin\VehicleAdminController;
 use App\Http\Controllers\Admin\UserAdminController;
 use App\Http\Controllers\Admin\ReservationAdminController;
 use App\Http\Controllers\Admin\PaymentAdminController;
+use App\Http\Controllers\PageController;
 
 // 🌐 Páginas públicas
 Route::get('/', fn () => Inertia::render('Home'))->name('home');
 Route::get('/viaturas', [VehicleController::class, 'index'])->name('vehicles.index');
 Route::get('/viaturas/{id}', [VehicleController::class, 'show'])->name('vehicles.show');
-Route::get('/sobre', fn () => Inertia::render('About'))->name('about');
-Route::get('/contacto', fn () => Inertia::render('Contact'))->name('contact');
-Route::get('/termos', fn () => Inertia::render('Terms'))->name('terms');
-Route::get('/privacidade', fn () => Inertia::render('Privacy'))->name('privacy');
+
+// 🔍 Páginas estáticas/informação
+Route::get('/sobre', [PageController::class, 'about'])->name('about');
+Route::get('/contacto', [PageController::class, 'contact'])->name('contact');
+Route::get('/termos', [PageController::class, 'terms'])->name('terms');
+Route::get('/privacidade', [PageController::class, 'privacy'])->name('privacy');
+
+
 
 // ✅ Área autenticada (clientes)
 Route::middleware(['auth', 'verified'])->group(function () {

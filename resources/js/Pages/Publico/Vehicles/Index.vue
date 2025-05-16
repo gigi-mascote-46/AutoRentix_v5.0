@@ -16,14 +16,22 @@
         <p><strong>Combustível:</strong> {{ bem.combustivel }}</p>
         <p><strong>Preço diário:</strong> {{ bem.preco_diario.toFixed(2) }} €</p>
 
-        <inertia-link
+        <Link
           :href="route('vehicles.show', bem.id)"
           class="inline-block mt-4 text-sm text-blue-600 hover:underline"
         >
           Ver detalhes
-        </inertia-link>
+        </Link>
       </div>
     </div>
+     <div>
+    <ul>
+      <li v-for="bem in bens" :key="bem.id">
+        Modelo: {{ bem.modelo }} -
+        Preço Diário: {{ typeof bem.preco_diario === 'number' ? bem.preco_diario.toFixed(2) : 'N/D' }} €
+      </li>
+    </ul>
+  </div>
   </div>
 </template>
 

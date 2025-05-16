@@ -20,7 +20,7 @@
           <input type="checkbox" v-model="form.remember" />
           <span>Lembrar-me</span>
         </label>
-        <inertia-link :href="route('password.request')" class="text-sm text-blue-600 hover:underline">Esqueceste a senha?</inertia-link>
+        <Link :href="route('password.request')" class="text-sm text-blue-600 hover:underline">Esqueceste a senha?</Link>
       </div>
 
       <button class="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700">Entrar</button>

@@ -21,10 +21,10 @@ Resumo com estatísticas, reservas ativas, etc.
     <div class="mt-8">
       <h2 class="mb-4 text-xl font-semibold">Atalhos Rápidos</h2>
       <ul class="space-y-2 list-disc list-inside">
-        <li><inertia-link :href="route('admin.vehicles.index')" class="text-blue-600 hover:underline">Gestão de Viaturas</inertia-link></li>
-        <li><inertia-link :href="route('admin.users.index')" class="text-blue-600 hover:underline">Gestão de Utilizadores</inertia-link></li>
-        <li><inertia-link :href="route('admin.reservations.index')" class="text-blue-600 hover:underline">Gestão de Reservas</inertia-link></li>
-        <li><inertia-link :href="route('admin.payments.index')" class="text-blue-600 hover:underline">Gestão de Pagamentos</inertia-link></li>
+        <li><Link :href="route('admin.vehicles.index')" class="text-blue-600 hover:underline">Gestão de Viaturas</Link></li>
+        <li><Link :href="route('admin.users.index')" class="text-blue-600 hover:underline">Gestão de Utilizadores</Link></li>
+        <li><Link :href="route('admin.reservations.index')" class="text-blue-600 hover:underline">Gestão de Reservas</Link></li>
+        <li><Link :href="route('admin.payments.index')" class="text-blue-600 hover:underline">Gestão de Pagamentos</Link></li>
       </ul>
     </div>
   </div>

@@ -21,12 +21,12 @@
           <td class="px-4 py-2 border">{{ reserva.data_fim }}</td>
           <td class="px-4 py-2 border">{{ reserva.status }}</td>
           <td class="px-4 py-2 border">
-            <inertia-link
+            <Link
               :href="route('my_reservations.show', reserva.id)"
               class="text-blue-600 hover:underline"
             >
               Ver detalhes
-            </inertia-link>
+            </Link>
           </td>
         </tr>
       </tbody>
