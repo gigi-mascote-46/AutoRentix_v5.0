@@ -2,21 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class BemCaracteristica extends Model
+class BemCaracteristica extends Pivot
 {
     protected $table = 'bem_caracteristicas';
-
-    protected $fillable = ['bem_locavel_id', 'caracteristica_id'];
-
-    public function bemLocavel()
-    {
-        return $this->belongsTo(BemLocavel::class);
-    }
-
-    public function caracteristica()
-    {
-        return $this->belongsTo(Caracteristica::class);
-    }
+    public $timestamps = false;
 }

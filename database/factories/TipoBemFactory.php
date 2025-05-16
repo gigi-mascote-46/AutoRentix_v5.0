@@ -3,18 +3,21 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\TipoBem;
 
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\TipoBem>
+ */
 class TipoBemFactory extends Factory
 {
-    protected $model = TipoBem::class;
-
-    public function definition()
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
+    public function definition(): array
     {
-        $tipos = ['Carro', 'Moto', 'Bicicleta', 'Camioneta', 'Scooter'];
-
         return [
-            'nome' => $this->faker->unique()->randomElement($tipos),
+            //
         ];
     }
 }

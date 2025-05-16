@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Localizacao extends Model
 {
     protected $table = 'localizacoes';
+    protected $fillable = ['bem_locavel_id', 'cidade', 'filial', 'posicao'];
+    public $timestamps = false;
 
-    protected $fillable = ['nome', 'endereco', 'cidade', 'codigo_postal'];
-
-    public function bensLocaveis()
+    public function bemLocavel()
     {
-        return $this->hasMany(BemLocavel::class);
+        return $this->belongsTo(BemLocavel::class, 'bem_locavel_id');
     }
 }

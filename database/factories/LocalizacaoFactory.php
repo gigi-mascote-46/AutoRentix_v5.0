@@ -3,18 +3,21 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\Localizacao;
 
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Localizacao>
+ */
 class LocalizacaoFactory extends Factory
 {
-    protected $model = Localizacao::class;
-
-    public function definition()
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
+    public function definition(): array
     {
         return [
-            'cidade' => $this->faker->city(),
-            'codigo_postal' => $this->faker->postcode(),
-            'morada' => $this->faker->address(),
+            //
         ];
     }
 }

@@ -2,10 +2,9 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\BemLocavel;
-use App\Models\TipoBem;
 use App\Models\Marca;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class BemLocavelFactory extends Factory
 {
@@ -13,18 +12,19 @@ class BemLocavelFactory extends Factory
 
     public function definition()
     {
-        // Garantir que existem tipos e marcas para relacionar
-        $tipoBem = TipoBem::inRandomOrder()->first() ?? TipoBem::factory()->create();
-        $marca = Marca::inRandomOrder()->first() ?? Marca::factory()->create();
-
         return [
-            'tipo_bem_id' => $tipoBem->id,
-            'marca_id' => $marca->id,
+            'marca_id' => Marca::factory(),
             'modelo' => $this->faker->word(),
-            'ano' => $this->faker->numberBetween(2000, 2024),
-            'preco' => $this->faker->randomFloat(2, 10, 500), // preço entre 10 e 500 (exemplo)
-            'disponivel' => $this->faker->boolean(80), // 80% chance de estar disponível
-            'descricao' => $this->faker->sentence(10),
+            'registo_unico_publico' => strtoupper($this->faker->bothify('??-##-??')),
+            'cor' => $this->faker->safeColorName(),
+            'numero_passageiros' => $this->faker->numberBetween(2,7),
+            'combustivel' => $this->faker->randomElement(['gasolina', 'diesel', 'elétrico', 'híbrido', 'outro']),
+            'numero_portas' => $this->faker->numberBetween(2,5),
+            'transmissao' => $this->faker->randomElement(['manual', 'automática']),
+            'ano' => $this->faker->year(),
+            'manutencao' => $this->faker->boolean(10), // 10% chance de estar em manutenção
+            'preco_diario' => $this->faker->randomFloat(2, 30, 150),
+            'observacao' => $this->faker->sentence(),
         ];
     }
 }

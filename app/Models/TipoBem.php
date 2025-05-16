@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class TipoBem extends Model
 {
-    protected $table = 'tipos_bens';
-
+    protected $table = 'tipo_bens';
     protected $fillable = ['nome'];
+    public $timestamps = false;
 
-    public function bensLocaveis()
+    public function marcas()
     {
-        return $this->hasMany(BemLocavel::class);
+        return $this->hasMany(Marca::class, 'tipo_bem_id');
     }
 }

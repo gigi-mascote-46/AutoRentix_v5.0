@@ -1,46 +1,58 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\ReservaController;
-use App\Http\Controllers\EmailConfirmationReservationController;
-use App\Http\Controllers\ReservationConfirmationMailController;
+use App\Http\Controllers\VehicleController;
+use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\VehicleAdminController;
+use App\Http\Controllers\Admin\UserAdminController;
+use App\Http\Controllers\Admin\ReservationAdminController;
+use App\Http\Controllers\Admin\PaymentAdminController;
 
+// 🌐 Páginas públicas
+Route::get('/', fn () => Inertia::render('Home'))->name('home');
+Route::get('/viaturas', [VehicleController::class, 'index'])->name('vehicles.index');
+Route::get('/viaturas/{id}', [VehicleController::class, 'show'])->name('vehicles.show');
+Route::get('/sobre', fn () => Inertia::render('About'))->name('about');
+Route::get('/contacto', fn () => Inertia::render('Contact'))->name('contact');
+Route::get('/termos', fn () => Inertia::render('Terms'))->name('terms');
+Route::get('/privacidade', fn () => Inertia::render('Privacy'))->name('privacy');
 
+// ✅ Área autenticada (clientes)
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', fn () => Inertia::render('Dashboard'))->name('dashboard');
+    Route::get('/perfil', fn () => Inertia::render('Profile'))->name('profile');
 
+    // Minhas reservas
+    Route::get('/minhas-reservas', [ReservationController::class, 'index'])->name('my_reservations.index');
+    Route::get('/minhas-reservas/{id}', [ReservationController::class, 'show'])->name('my_reservations.show');
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    // Pagamentos
+    Route::get('/pagamentos', fn () => Inertia::render('Payments'))->name('payments');
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// 🔐 Área de administração
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
 
-//  rota para o formulario de reserva
-Route::get('/reserva/confirmada', function () {
-    return Inertia::render('ReservaConfirmada', [
-        'client' => 'João Silva',
-        'local' => 'Filial Norte'
-    ]);
+    // Viaturas
+    Route::get('/viaturas', [VehicleAdminController::class, 'index'])->name('vehicles.index');
+    Route::get('/viaturas/criar', [VehicleAdminController::class, 'create'])->name('vehicles.create');
+    Route::post('/viaturas', [VehicleAdminController::class, 'store'])->name('vehicles.store');
+    Route::get('/viaturas/{id}/editar', [VehicleAdminController::class, 'edit'])->name('vehicles.edit');
+    Route::put('/viaturas/{id}', [VehicleAdminController::class, 'update'])->name('vehicles.update');
+    Route::delete('/viaturas/{id}', [VehicleAdminController::class, 'destroy'])->name('vehicles.destroy');
+
+    // Utilizadores
+    Route::get('/utilizadores', [UserAdminController::class, 'index'])->name('users.index');
+
+    // Reservas
+    Route::get('/reservas', [ReservationAdminController::class, 'index'])->name('reservations.index');
+
+    // Pagamentos
+    Route::get('/pagamentos', [PaymentAdminController::class, 'index'])->name('payments.index');
+
+    // Relatórios
+    Route::get('/relatorios', fn () => Inertia::render('Admin/Reports'))->name('reports');
 });
-
-// rota para tratar o envio do email
-Route::post('/enviar-email', [ReservationConfirmationMailController::class, 'sendReservationEmail'])
-    ->middleware('auth')
-    ->name('send.email');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-require __DIR__.'/auth.php';

@@ -7,34 +7,30 @@ use Illuminate\Database\Eloquent\Model;
 class BemLocavel extends Model
 {
     protected $table = 'bens_locaveis';
-
     protected $fillable = [
-        'nome', 'descricao', 'preco_dia', 'marca_id',
-        'tipo_bem_id', 'localizacao_id', 'disponivel'
+        'marca_id', 'modelo', 'registo_unico_publico', 'cor',
+        'numero_passageiros', 'combustivel', 'numero_portas',
+        'transmissao', 'ano', 'manutencao', 'preco_diario', 'observacao'
     ];
+    public $timestamps = false;
 
     public function marca()
     {
-        return $this->belongsTo(Marca::class);
-    }
-
-    public function tipoBem()
-    {
-        return $this->belongsTo(TipoBem::class);
+        return $this->belongsTo(Marca::class, 'marca_id');
     }
 
     public function localizacao()
     {
-        return $this->belongsTo(Localizacao::class);
+        return $this->hasOne(Localizacao::class, 'bem_locavel_id');
     }
 
     public function caracteristicas()
     {
-        return $this->belongsToMany(Caracteristica::class, 'bem_caracteristicas');
+        return $this->belongsToMany(Caracteristica::class, 'bem_caracteristicas', 'bem_locavel_id', 'caracteristica_id');
     }
 
     public function reservas()
     {
-        return $this->hasMany(Reserva::class);
+        return $this->hasMany(Reservation::class, 'bem_locavel_id');
     }
 }

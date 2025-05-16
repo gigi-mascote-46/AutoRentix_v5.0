@@ -2,17 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BemLocavel;
-use App\Models\Caracteristica;
-use App\Models\Localizacao;
-use App\Models\Marca;
-use App\Models\Pagamento;
-use App\Models\Reserva;
-use App\Models\TipoBem;
-use App\Models\User;
-use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Routing\Controller as BaseController;
 
-abstract class Controller
+class Controller extends BaseController
 {
-    //
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 }
