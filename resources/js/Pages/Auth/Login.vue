@@ -1,102 +1,47 @@
-<!-- Login no sistema -->
+<template>
+  <div>
+    <h1 class="mb-4 text-xl font-bold">Iniciar Sessão</h1>
+
+    <form @submit.prevent="submit" class="space-y-4">
+      <div>
+        <label>Email</label>
+        <input type="email" v-model="form.email" class="w-full px-3 py-2 border rounded" />
+        <div v-if="form.errors.email" class="text-sm text-red-500">{{ form.errors.email }}</div>
+      </div>
+
+      <div>
+        <label>Palavra-passe</label>
+        <input type="password" v-model="form.password" class="w-full px-3 py-2 border rounded" />
+        <div v-if="form.errors.password" class="text-sm text-red-500">{{ form.errors.password }}</div>
+      </div>
+
+      <div class="flex items-center justify-between">
+        <label class="flex items-center space-x-2">
+          <input type="checkbox" v-model="form.remember" />
+          <span>Lembrar-me</span>
+        </label>
+        <inertia-link :href="route('password.request')" class="text-sm text-blue-600 hover:underline">Esqueceste a senha?</inertia-link>
+      </div>
+
+      <button class="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700">Entrar</button>
+    </form>
+  </div>
+</template>
 
 <script setup>
-import Checkbox from '@/Components/Checkbox.vue';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import AuthLayout from '@/Layouts/AuthLayout.vue'
+defineOptions({ layout: AuthLayout })
 
-defineProps({
-    canResetPassword: {
-        type: Boolean,
-    },
-    status: {
-        type: String,
-    },
-});
+import { useForm } from '@inertiajs/vue3';
 
 const form = useForm({
-    email: '',
-    password: '',
-    remember: false,
+  email: '',
+  password: '',
+  remember: false,
 });
 
-const submit = () => {
-    form.post(route('login'), {
-        onFinish: () => form.reset('password'),
-    });
-};
+function submit() {
+  form.post(route('login'));
+}
 </script>
 
-<template>
-    <GuestLayout>
-        <Head title="Log in" />
-
-        <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
-            {{ status }}
-        </div>
-
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="email" value="Email" />
-
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="block w-full mt-1"
-                    v-model="form.email"
-                    required
-                    autofocus
-                    autocomplete="username"
-                />
-
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
-
-                <TextInput
-                    id="password"
-                    type="password"
-                    class="block w-full mt-1"
-                    v-model="form.password"
-                    required
-                    autocomplete="current-password"
-                />
-
-                <InputError class="mt-2" :message="form.errors.password" />
-            </div>
-
-            <div class="block mt-4">
-                <label class="flex items-center">
-                    <Checkbox name="remember" v-model:checked="form.remember" />
-                    <span class="text-sm text-gray-600 ms-2"
-                        >Remember me</span
-                    >
-                </label>
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <Link
-                    v-if="canResetPassword"
-                    :href="route('password.request')"
-                    class="text-sm text-gray-600 underline rounded-md hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                >
-                    Forgot your password?
-                </Link>
-
-                <PrimaryButton
-                    class="ms-4"
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
-                >
-                    Log in
-                </PrimaryButton>
-            </div>
-        </form>
-    </GuestLayout>
-</template>

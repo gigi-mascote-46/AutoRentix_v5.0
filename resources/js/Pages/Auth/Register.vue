@@ -1,115 +1,50 @@
-<!-- Registo de utilizador -->
+<template>
+  <div>
+    <h1 class="mb-4 text-xl font-bold">Criar Conta</h1>
+
+    <form @submit.prevent="submit" class="space-y-4">
+      <div>
+        <label>Nome</label>
+        <input type="text" v-model="form.name" class="w-full px-3 py-2 border rounded" />
+        <div v-if="form.errors.name" class="text-sm text-red-500">{{ form.errors.name }}</div>
+      </div>
+
+      <div>
+        <label>Email</label>
+        <input type="email" v-model="form.email" class="w-full px-3 py-2 border rounded" />
+        <div v-if="form.errors.email" class="text-sm text-red-500">{{ form.errors.email }}</div>
+      </div>
+
+      <div>
+        <label>Palavra-passe</label>
+        <input type="password" v-model="form.password" class="w-full px-3 py-2 border rounded" />
+        <div v-if="form.errors.password" class="text-sm text-red-500">{{ form.errors.password }}</div>
+      </div>
+
+      <div>
+        <label>Confirmar Palavra-passe</label>
+        <input type="password" v-model="form.password_confirmation" class="w-full px-3 py-2 border rounded" />
+      </div>
+
+      <button class="px-4 py-2 text-white bg-green-600 rounded hover:bg-green-700">Criar Conta</button>
+    </form>
+  </div>
+</template>
 
 <script setup>
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import AuthLayout from '@/Layouts/AuthLayout.vue'
+defineOptions({ layout: AuthLayout })
+
+import { useForm } from '@inertiajs/vue3';
 
 const form = useForm({
-    name: '',
-    email: '',
-    password: '',
-    password_confirmation: '',
+  name: '',
+  email: '',
+  password: '',
+  password_confirmation: '',
 });
 
-const submit = () => {
-    form.post(route('register'), {
-        onFinish: () => form.reset('password', 'password_confirmation'),
-    });
-};
+function submit() {
+  form.post(route('register'));
+}
 </script>
-
-<template>
-    <GuestLayout>
-        <Head title="Register" />
-
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="name" value="Name" />
-
-                <TextInput
-                    id="name"
-                    type="text"
-                    class="block w-full mt-1"
-                    v-model="form.name"
-                    required
-                    autofocus
-                    autocomplete="name"
-                />
-
-                <InputError class="mt-2" :message="form.errors.name" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="email" value="Email" />
-
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="block w-full mt-1"
-                    v-model="form.email"
-                    required
-                    autocomplete="username"
-                />
-
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
-
-                <TextInput
-                    id="password"
-                    type="password"
-                    class="block w-full mt-1"
-                    v-model="form.password"
-                    required
-                    autocomplete="new-password"
-                />
-
-                <InputError class="mt-2" :message="form.errors.password" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel
-                    for="password_confirmation"
-                    value="Confirm Password"
-                />
-
-                <TextInput
-                    id="password_confirmation"
-                    type="password"
-                    class="block w-full mt-1"
-                    v-model="form.password_confirmation"
-                    required
-                    autocomplete="new-password"
-                />
-
-                <InputError
-                    class="mt-2"
-                    :message="form.errors.password_confirmation"
-                />
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <Link
-                    :href="route('login')"
-                    class="text-sm text-gray-600 underline rounded-md hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                >
-                    Already registered?
-                </Link>
-
-                <PrimaryButton
-                    class="ms-4"
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
-                >
-                    Register
-                </PrimaryButton>
-            </div>
-        </form>
-    </GuestLayout>
-</template>

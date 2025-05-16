@@ -1,61 +1,27 @@
-<script setup>
-import { computed } from 'vue';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
-
-const props = defineProps({
-    status: {
-        type: String,
-    },
-});
-
-const form = useForm({});
-
-const submit = () => {
-    form.post(route('verification.send'));
-};
-
-const verificationLinkSent = computed(
-    () => props.status === 'verification-link-sent',
-);
-</script>
-
 <template>
-    <GuestLayout>
-        <Head title="Email Verification" />
+  <div>
+    <h1 class="mb-4 text-xl font-bold">Verifica o teu Email</h1>
+    <p class="mb-4">Foi enviado um link de verificação para o teu email.</p>
+    <p>Se não recebeste, clica abaixo para reenviar:</p>
 
-        <div class="mb-4 text-sm text-gray-600">
-            Thanks for signing up! Before getting started, could you verify your
-            email address by clicking on the link we just emailed to you? If you
-            didn't receive the email, we will gladly send you another.
-        </div>
-
-        <div
-            class="mb-4 text-sm font-medium text-green-600"
-            v-if="verificationLinkSent"
-        >
-            A new verification link has been sent to the email address you
-            provided during registration.
-        </div>
-
-        <form @submit.prevent="submit">
-            <div class="mt-4 flex items-center justify-between">
-                <PrimaryButton
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
-                >
-                    Resend Verification Email
-                </PrimaryButton>
-
-                <Link
-                    :href="route('logout')"
-                    method="post"
-                    as="button"
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    >Log Out</Link
-                >
-            </div>
-        </form>
-    </GuestLayout>
+    <form @submit.prevent="submit">
+      <button class="px-4 py-2 mt-4 text-white bg-blue-600 rounded hover:bg-blue-700">
+        Reenviar Email de Verificação
+      </button>
+    </form>
+  </div>
 </template>
+
+<script setup>
+
+import AuthLayout from '@/Layouts/AuthLayout.vue'
+defineOptions({ layout: AuthLayout })
+
+import { useForm } from '@inertiajs/vue3';
+
+const form = useForm();
+
+function submit() {
+  form.post(route('verification.send'));
+}
+</script>

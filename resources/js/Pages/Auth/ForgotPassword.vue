@@ -1,70 +1,30 @@
-<!-- form para tentar recuperar password -->
+<template>
+  <div>
+    <h1 class="mb-4 text-xl font-bold">Recuperar Palavra-passe</h1>
+    <p class="mb-4">Insere o teu email para receberes o link de recuperação.</p>
+
+    <form @submit.prevent="submit" class="space-y-4">
+      <div>
+        <label for="email" class="block font-semibold">Email</label>
+        <input type="email" v-model="form.email" class="w-full px-3 py-2 border rounded" />
+        <div v-if="form.errors.email" class="text-sm text-red-500">{{ form.errors.email }}</div>
+      </div>
+
+      <button class="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700">Enviar link</button>
+    </form>
+  </div>
+</template>
 
 <script setup>
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import { Head, useForm } from '@inertiajs/vue3';
+import AuthLayout from '@/Layouts/AuthLayout.vue'
+defineOptions({ layout: AuthLayout })
 
-defineProps({
-    status: {
-        type: String,
-    },
-});
 
-const form = useForm({
-    email: '',
-});
+import { useForm } from '@inertiajs/vue3';
 
-const submit = () => {
-    form.post(route('password.email'));
-};
+const form = useForm({ email: '' });
+
+function submit() {
+  form.post(route('password.email'));
+}
 </script>
-
-<template>
-    <GuestLayout>
-        <Head title="Forgot Password" />
-
-        <div class="mb-4 text-sm text-gray-600">
-            Forgot your password? No problem. Just let us know your email
-            address and we will email you a password reset link that will allow
-            you to choose a new one.
-        </div>
-
-        <div
-            v-if="status"
-            class="mb-4 text-sm font-medium text-green-600"
-        >
-            {{ status }}
-        </div>
-
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="email" value="Email" />
-
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="block w-full mt-1"
-                    v-model="form.email"
-                    required
-                    autofocus
-                    autocomplete="username"
-                />
-
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <PrimaryButton
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
-                >
-                    Email Password Reset Link
-                </PrimaryButton>
-            </div>
-        </form>
-    </GuestLayout>
-</template>

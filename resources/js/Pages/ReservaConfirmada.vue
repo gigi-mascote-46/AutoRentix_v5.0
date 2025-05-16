@@ -78,3 +78,8 @@ function submitForm() {
     <div v-if="successMessage" class="mt-4 font-semibold text-green-600">{{ successMessage }}</div>
   </div>
 </template>
+<script setup>
+import GuestLayout from '@/Layouts/GuestLayout.vue';
+defineOptions({ layout: GuestLayout });
+</script>
+

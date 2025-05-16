@@ -15,14 +15,14 @@ class AdminVehicleController extends Controller
     public function index()
     {
         $bens = BemLocavel::with('marca')->get();
-        return Inertia::render('Admin/Vehicles/Index', compact('bens'));
+        return Inertia::render('AreaAdmin/Admin/Vehicles/Index', compact('bens'));
     }
 
     public function create()
     {
         // Para o formulário, precisas de listar marcas
         $marcas = Marca::all();
-        return Inertia::render('Admin/Vehicles/Create', compact('marcas'));
+        return Inertia::render('AreaAdmin/Admin/Vehicles/Index', compact('marcas'));
     }
 public function store(StoreBemLocavelRequest $request)
 {
