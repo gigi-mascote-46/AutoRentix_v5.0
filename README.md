@@ -129,6 +129,4 @@ Projeto desenvolvido por Angela Peixoto.
 
 ---
 
-## Licença
 
-Este projeto está licenciado sob a MIT License - consulte o ficheiro [LICENSE](LICENSE) para detalhes.
