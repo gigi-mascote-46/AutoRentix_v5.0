@@ -5,10 +5,10 @@ use Inertia\Inertia;
 use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Admin\VehicleAdminController;
-use App\Http\Controllers\Admin\UserAdminController;
-use App\Http\Controllers\Admin\ReservationAdminController;
-use App\Http\Controllers\Admin\PaymentAdminController;
+use App\Http\Controllers\Admin\AdminVehicleController;
+use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\AdminReservationController;
+use App\Http\Controllers\Admin\AdminPaymentController;
 use App\Http\Controllers\PageController;
 
 // 🌐 Páginas públicas
@@ -42,21 +42,21 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
 
     // Viaturas
-    Route::get('/viaturas', [VehicleAdminController::class, 'index'])->name('vehicles.index');
-    Route::get('/viaturas/criar', [VehicleAdminController::class, 'create'])->name('vehicles.create');
-    Route::post('/viaturas', [VehicleAdminController::class, 'store'])->name('vehicles.store');
-    Route::get('/viaturas/{id}/editar', [VehicleAdminController::class, 'edit'])->name('vehicles.edit');
-    Route::put('/viaturas/{id}', [VehicleAdminController::class, 'update'])->name('vehicles.update');
-    Route::delete('/viaturas/{id}', [VehicleAdminController::class, 'destroy'])->name('vehicles.destroy');
+    Route::get('/viaturas', [AdminVehicleController::class, 'index'])->name('vehicles.index');
+    Route::get('/viaturas/criar', [AdminVehicleController::class, 'create'])->name('vehicles.create');
+    Route::post('/viaturas', [AdminVehicleController::class, 'store'])->name('vehicles.store');
+    Route::get('/viaturas/{id}/editar', [AdminVehicleController::class, 'edit'])->name('vehicles.edit');
+    Route::put('/viaturas/{id}', [AdminVehicleController::class, 'update'])->name('vehicles.update');
+    Route::delete('/viaturas/{id}', [AdminVehicleController::class, 'destroy'])->name('vehicles.destroy');
 
     // Utilizadores
-    Route::get('/utilizadores', [UserAdminController::class, 'index'])->name('users.index');
+    Route::get('/utilizadores', [AdminUserController::class, 'index'])->name('users.index');
 
     // Reservas
-    Route::get('/reservas', [ReservationAdminController::class, 'index'])->name('reservations.index');
+    Route::get('/reservas', [AdminReservationController::class, 'index'])->name('reservations.index');
 
     // Pagamentos
-    Route::get('/pagamentos', [PaymentAdminController::class, 'index'])->name('payments.index');
+    Route::get('/pagamentos', [AdminPaymentController::class, 'index'])->name('payments.index');
 
     // Relatórios
     Route::get('/relatorios', fn () => Inertia::render('Admin/Reports'))->name('reports');
