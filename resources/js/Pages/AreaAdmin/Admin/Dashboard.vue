@@ -19,6 +19,15 @@ Resumo com estatísticas, reservas ativas, etc.
     </div>
 
     <div class="mt-8">
+      <h2 class="mb-4 text-xl font-semibold">Próximas Reservas</h2>
+      <ul class="space-y-2 list-disc list-inside">
+        <li v-for="reservation in upcomingReservations" :key="reservation.id">
+          {{ reservation.matricula }} / {{ reservation.marca }} - {{ reservation.modelo }} / Duração: {{ reservation.duration }} dia<span v-if="reservation.duration > 1">s</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="mt-8">
       <h2 class="mb-4 text-xl font-semibold">Atalhos Rápidos</h2>
       <ul class="space-y-2 list-disc list-inside">
         <li><Link :href="route('admin.vehicles.index')" class="text-blue-600 hover:underline">Gestão de Viaturas</Link></li>
@@ -36,5 +45,6 @@ defineOptions({ layout: AdminLayout });
 
 defineProps({
   stats: Object,
+  upcomingReservations: Array,
 });
 </script>

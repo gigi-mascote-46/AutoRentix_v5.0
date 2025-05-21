@@ -20,6 +20,9 @@
         "vue": "^3.4.0"
     },
     "dependencies": {
-        "@inertiajs/inertia": "^0.11.1"
+        "@inertiajs/inertia": "^0.11.1",
+        "jspdf": "^3.0.1",
+        "jspdf-autotable": "^5.0.2",
+        "xlsx": "^0.18.5"
     }
 }

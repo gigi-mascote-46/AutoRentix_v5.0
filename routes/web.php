@@ -11,37 +11,52 @@ use App\Http\Controllers\Admin\AdminReservationController;
 use App\Http\Controllers\Admin\AdminPaymentController;
 use App\Http\Controllers\PageController;
 
-// 🌐 Páginas públicas
-Route::get('/', fn () => Inertia::render('Home'))->name('home');
-Route::get('/viaturas', [VehicleController::class, 'index'])->name('vehicles.index');
-Route::get('/viaturas/{id}', [VehicleController::class, 'show'])->name('vehicles.show');
-
-// 🔍 Páginas estáticas/informação
-Route::get('/sobre', [PageController::class, 'about'])->name('about');
-Route::get('/contacto', [PageController::class, 'contact'])->name('contact');
-Route::get('/termos', [PageController::class, 'terms'])->name('terms');
-Route::get('/privacidade', [PageController::class, 'privacy'])->name('privacy');
 
 
+// 🌐 Páginas públicas - resources/js/Pages/Publico
+// o path da rota é /resources/js/Pages/Publico
 
-// ✅ Área autenticada (clientes)
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', fn () => Inertia::render('Dashboard'))->name('dashboard');
-    Route::get('/perfil', fn () => Inertia::render('Profile'))->name('profile');
+Route::name('publico.')->group(function () {
+    Route::get('/', fn () => Inertia::render('Publico/Home'))->name('home');
+    Route::get('/viaturas', [VehicleController::class, 'index'])->name('vehicles.index');
+    Route::get('/viaturas/{id}', [VehicleController::class, 'show'])->name('vehicles.show');
 
-    // Minhas reservas
-    Route::get('/minhas-reservas', [ReservationController::class, 'index'])->name('my_reservations.index');
-    Route::get('/minhas-reservas/{id}', [ReservationController::class, 'show'])->name('my_reservations.show');
-
-    // Pagamentos
-    Route::get('/pagamentos', fn () => Inertia::render('Payments'))->name('payments');
+    // 🔍Páginas estáticas/informação
+    Route::get('/sobre', [PageController::class, 'about'])->name('about');
+    Route::get('/contacto', [PageController::class, 'contact'])->name('contact');
+    Route::get('/termos', [PageController::class, 'terms'])->name('terms');
+    Route::get('/privacidade', [PageController::class, 'privacy'])->name('privacy');
 });
 
+// ----------------------------------------------------------//
+// ✅ Área autenticada (clientes)
+// o path da rota é /resources/js/Pages/AreaCliente
+
+Route::middleware(['auth', 'verified'])->prefix('areacliente')->name('areacliente.')->group(function () {
+    Route::get('/', fn () => Inertia::render('AreaCliente/Dashboard'))->name('dashboard');
+    Route::get('/dashboard', fn () => Inertia::render('AreaCliente/Dashboard'))->name('dashboard');
+    Route::get('/perfil', fn () => Inertia::render('AreaCliente/Profile'))->name('profile');
+    Route::get('/minhas-reservas', [ReservationController::class, 'index'])->name('my_reservations.index');
+    Route::get('/minhas-reservas/{id}', [ReservationController::class, 'show'])->name('my_reservations.show');
+    Route::get('/minhas-reservas/{id}/cancelar', [ReservationController::class, 'cancel'])->name('my_reservations.cancel');
+    Route::get('/pagamentos', fn () => Inertia::render('AreaCliente/Payments'))->name('payments');
+    Route::get('/viaturas', [VehicleController::class, 'index'])->name('vehicles.index');
+    Route::get('/viaturas/{id}', [VehicleController::class, 'show'])->name('vehicles.show');
+    Route::get('/viaturas/{id}/reservar', [ReservationController::class, 'create'])->name('vehicles.reserve');
+    Route::post('/viaturas/{id}/reservar', [ReservationController::class, 'store'])->name('vehicles.reserve.store');
+    Route::get('/viaturas/{id}/reservar/confirmar', [ReservationController::class, 'confirm'])->name('vehicles.reserve.confirm');
+    Route::get('/viaturas/{id}/reservar/pagamento', [ReservationController::class, 'payment'])->name('vehicles.reserve.payment');
+    Route::post('/viaturas/{id}/reservar/pagamento', [ReservationController::class, 'processPayment'])->name('vehicles.reserve.payment.process');
+});
+
+// ----------------------------------------------------------//
 // 🔐 Área de administração
+// o path da rota é /resources/js/Pages/AreaAdmin
+
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
 
-    // Viaturas
+    // Viaturas para o admin
     Route::get('/viaturas', [AdminVehicleController::class, 'index'])->name('vehicles.index');
     Route::get('/viaturas/criar', [AdminVehicleController::class, 'create'])->name('vehicles.create');
     Route::post('/viaturas', [AdminVehicleController::class, 'store'])->name('vehicles.store');
@@ -59,5 +74,33 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/pagamentos', [AdminPaymentController::class, 'index'])->name('payments.index');
 
     // Relatórios
-    Route::get('/relatorios', fn () => Inertia::render('Admin/Reports'))->name('reports');
+    Route::get('/relatorios', function () {
+        $sampleReports = [
+            'totalReceita' => 12345.67,
+            'totalReservas' => 89,
+            'reservasPorMes' => [
+                '01' => 5,
+                '02' => 8,
+                '03' => 12,
+                '04' => 7,
+                '05' => 10,
+                '06' => 15,
+                '07' => 9,
+                '08' => 6,
+                '09' => 10,
+                '10' => 7,
+                '11' => 0,
+                '12' => 0,
+            ],
+        ];
+        $sampleBrands = [
+            ['id' => 1, 'name' => 'Marca A'],
+            ['id' => 2, 'name' => 'Marca B'],
+            ['id' => 3, 'name' => 'Marca C'],
+        ];
+        return Inertia::render('AreaAdmin/Admin/Reports', [
+            'reports' => $sampleReports,
+            'brands' => $sampleBrands,
+        ]);
+    })->name('reports');
 });
