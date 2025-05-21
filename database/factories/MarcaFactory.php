@@ -17,7 +17,9 @@ class MarcaFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'tipo_bem_id' => \App\Models\TipoBem::factory(),
+            'nome' => $this->faker->company(),
+            'observacao' => $this->faker->sentence(),
         ];
     }
 }
