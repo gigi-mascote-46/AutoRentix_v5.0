@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Auth;
 
 class Authenticate
 {
@@ -15,6 +16,13 @@ class Authenticate
      */
     public function handle(Request $request, Closure $next): Response
     {
+        if (!Auth::check()) {
+            // Redirect to login page or abort with 401 Unauthorized
+            // Redirect to login page or abort with 401 Unauthorized
+            return redirect('/login');
+            // Or use abort(401);
+        }
+
         return $next($request);
     }
 }

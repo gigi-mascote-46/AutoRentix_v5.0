@@ -9,13 +9,14 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // Aqui chamamos os seeders que criarmos
-$this->call([
-        TipoBemSeeder::class,
-        MarcaSeeder::class,
-        BemLocavelSeeder::class,
-        LocalizacaoSeeder::class,
-        CaracteristicaSeeder::class,
-        BemCaracteristicaSeeder::class,
-    ]);
+        $this->call([
+            UserSeeder::class,
+            TipoBemSeeder::class,
+            MarcaSeeder::class,
+            BemLocavelSeeder::class,
+            LocalizacaoSeeder::class,
+            CaracteristicaSeeder::class,
+            BemCaracteristicaSeeder::class,
+        ]);
     }
 }

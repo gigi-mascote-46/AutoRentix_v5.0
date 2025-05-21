@@ -9,8 +9,9 @@ class TipoBemSeeder extends Seeder
 {
     public function run()
     {
-        DB::table('tipo_bens')->insert([
-            ['id' => 1, 'nome' => 'Carro'],
-        ]);
+        DB::table('tipo_bens')->updateOrInsert(
+            ['id' => 1],
+            ['nome' => 'Carro']
+        );
     }
 }

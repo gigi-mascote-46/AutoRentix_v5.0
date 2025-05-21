@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Reservation;
 use App\Models\User;
+// Make sure the User model exists at app/Models/User.php with namespace App\Models;
 use App\Models\BemLocavel;
 use Illuminate\Database\Eloquent\Factories\Factory;
 

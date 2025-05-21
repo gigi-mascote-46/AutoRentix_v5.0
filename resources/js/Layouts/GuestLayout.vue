@@ -39,7 +39,7 @@ import { usePage } from '@inertiajs/vue3';
 import { Inertia } from '@inertiajs/inertia';
 
 const page = usePage();
-const user = page.props.value.auth?.user || null;
+const user = page.props?.auth?.user || null;
 
 function logout() {
   if (confirm('Deseja terminar a sessão?')) {
