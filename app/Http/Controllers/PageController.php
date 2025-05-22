@@ -23,7 +23,7 @@ class PageController extends Controller
 
     public function privacy()
     {
-        return Inertia::render('Publico/Privacy');
+        return Inertia::render('Publico/PrivacyPolicy');
     }
 
     public function complaint()
@@ -34,5 +34,10 @@ class PageController extends Controller
     public function help()
     {
         return Inertia::render('Publico/Help');
+    }
+
+    public function refund()
+    {
+        return Inertia::render('Publico/Refund');
     }
 }

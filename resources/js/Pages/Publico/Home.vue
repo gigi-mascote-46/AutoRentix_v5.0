@@ -54,18 +54,17 @@
         <div>
           <h3 class="mb-2 font-bold">Redes Sociais</h3>
           <ul class="space-y-1">
-            <li><a href="#" class="hover:underline">Facebook</a></li>
-            <li><a href="#" class="hover:underline">Instagram</a></li>
-            <li><a href="#" class="hover:underline">Twitter</a></li>
+            <li><a href="http://facebook.com" class="hover:underline">Facebook</a></li>
+            <li><a href="http://instagram.com" class="hover:underline">Instagram</a></li>
           </ul>
         </div>
         <div>
           <h3 class="mb-2 font-bold">Ajuda & Políticas</h3>
           <ul class="space-y-1">
-            <li><a href="#" class="hover:underline">Ajuda</a></li>
-            <li><a href="#" class="hover:underline">Reclamação</a></li>
-            <li><a href="#" class="hover:underline">Termos e Condições</a></li>
-            <li><a href="#" class="hover:underline">Política de Reembolsos</a></li>
+            <li><a href="help" class="hover:underline">Ajuda</a></li>
+            <li><a href="complaint" class="hover:underline">Reclamação</a></li>
+            <li><a href="terms" class="hover:underline">Termos e Condições</a></li>
+            <li><a href="refund" class="hover:underline">Política de Reembolsos</a></li>
           </ul>
         </div>
       </div>

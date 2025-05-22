@@ -10,7 +10,14 @@ use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminReservationController;
 use App\Http\Controllers\Admin\AdminPaymentController;
 use App\Http\Controllers\PageController;
+// admin middleware
+use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\Authenticate;
+use App\Http\Middleware\TrustProxies;
+// user middleware
+use App\Http\Middleware\Authenticate as UserAuthenticate;
 
+require __DIR__.'/auth.php';
 
 
 // 🌐 Páginas públicas - resources/js/Pages/Publico
@@ -24,9 +31,10 @@ Route::name('publico.')->group(function () {
     // 🔍Páginas estáticas/informação
     Route::get('/sobre', [PageController::class, 'about'])->name('about');
     Route::get('/contacto', [PageController::class, 'contact'])->name('contact');
-    Route::get('/termos', [PageController::class, 'terms'])->name('terms');
-    Route::get('/reclamacao', [PageController::class, 'complaint'])->name('complaint');
+    Route::get('/terms', [PageController::class, 'terms']);
+    Route::get('/complaint', [PageController::class, 'complaint']);
     Route::get('/help', [PageController::class, 'help'])->name('help');
+    Route::get('/refund', [PageController::class, 'refund'])->name('refund');
 });
 
 // ----------------------------------------------------------//
