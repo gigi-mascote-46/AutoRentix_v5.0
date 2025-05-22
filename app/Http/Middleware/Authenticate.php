@@ -17,7 +17,7 @@ class Authenticate
     public function handle(Request $request, Closure $next): Response
     {
         if (!Auth::check()) {
-            // Redirect to login page or abort with 401 Unauthorized
+            
             // Redirect to login page or abort with 401 Unauthorized
             return redirect('/login');
             // Or use abort(401);

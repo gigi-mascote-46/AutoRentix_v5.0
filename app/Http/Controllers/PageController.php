@@ -25,4 +25,14 @@ class PageController extends Controller
     {
         return Inertia::render('Publico/Privacy');
     }
+
+    public function complaint()
+    {
+        return Inertia::render('Publico/Complaint');
+    }
+
+    public function help()
+    {
+        return Inertia::render('Publico/Help');
+    }
 }

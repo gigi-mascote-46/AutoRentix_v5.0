@@ -2,21 +2,21 @@
   <div class="flex flex-col min-h-screen">
     <!-- Header -->
     <header class="flex items-center justify-between p-4 bg-white shadow">
-      <inertia-link href="/" class="text-2xl font-bold text-blue-600">AutoRentix</inertia-link>
+      <Link href="/" class="text-2xl font-bold text-blue-600">AutoRentix</Link>
 
       <nav class="space-x-4">
-        <inertia-link href="/" class="hover:text-blue-600">Home</inertia-link>
-        <inertia-link href="/viaturas" class="hover:text-blue-600">Viaturas</inertia-link>
-        <inertia-link href="/sobre" class="hover:text-blue-600">Sobre</inertia-link>
-        <inertia-link href="/contacto" class="hover:text-blue-600">Contacto</inertia-link>
+        <Link href="/" class="hover:text-blue-600">Home</Link>
+        <Link href="/viaturas" class="hover:text-blue-600">Viaturas</Link>
+        <Link href="/sobre" class="hover:text-blue-600">Sobre</Link>
+        <Link href="/contacto" class="hover:text-blue-600">Contacto</Link>
 
         <template v-if="!user">
-          <inertia-link href="/login" class="font-semibold text-blue-600 hover:underline">Entrar</inertia-link>
-          <inertia-link href="/register" class="font-semibold text-blue-600 hover:underline">Registar</inertia-link>
+          <Link href="/login" class="font-semibold text-blue-600 hover:underline">Entrar</Link>
+          <Link href="/register" class="font-semibold text-blue-600 hover:underline">Registar</Link>
         </template>
 
         <template v-else>
-          <inertia-link href="/dashboard" class="font-semibold text-blue-600 hover:underline">Dashboard</inertia-link>
+          <Link href="/dashboard" class="font-semibold text-blue-600 hover:underline">Dashboard</Link>
           <button @click="logout" class="text-red-600 hover:underline">Sair</button>
         </template>
       </nav>
@@ -35,7 +35,7 @@
 </template>
 
 <script setup>
-import { usePage } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 import { Inertia } from '@inertiajs/inertia';
 
 const page = usePage();

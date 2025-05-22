@@ -25,7 +25,8 @@ Route::name('publico.')->group(function () {
     Route::get('/sobre', [PageController::class, 'about'])->name('about');
     Route::get('/contacto', [PageController::class, 'contact'])->name('contact');
     Route::get('/termos', [PageController::class, 'terms'])->name('terms');
-    Route::get('/privacidade', [PageController::class, 'privacy'])->name('privacy');
+    Route::get('/reclamacao', [PageController::class, 'complaint'])->name('complaint');
+    Route::get('/help', [PageController::class, 'help'])->name('help');
 });
 
 // ----------------------------------------------------------//

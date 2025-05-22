@@ -2,12 +2,14 @@
 <template>
   <div>
     <!-- Custom Navbar -->
-    <nav class="flex justify-center p-4 space-x-8 bg-white shadow">
-      <inertia-link href="/sobre" class="font-semibold text-gray-700 hover:text-blue-600">Sobre</inertia-link>
+    <!-- <nav class="flex justify-center p-4 space-x-8 bg-center bg-no-repeat"
+     style="background-image: url('/images/autorentix_logo.png'); background-size: cover; width: 100%; height: 100%;">   -->
+
+      <!-- <inertia-link href="/sobre" class="font-semibold text-gray-700 hover:text-blue-600">Sobre</inertia-link>
       <inertia-link href="/viaturas" class="font-semibold text-gray-700 hover:text-blue-600">Viaturas</inertia-link>
       <inertia-link href="/login" class="font-semibold text-gray-700 hover:text-blue-600">Entrar</inertia-link>
-      <inertia-link href="/register" class="font-semibold text-gray-700 hover:text-blue-600">Registar</inertia-link>
-    </nav>
+      <inertia-link href="/register" class="font-semibold text-gray-700 hover:text-blue-600">Registar</inertia-link> -->
+    <!-- </nav> -->
 
     <!-- Carousel -->
     <section class="max-w-6xl mx-auto my-8">
