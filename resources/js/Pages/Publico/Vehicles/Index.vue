@@ -13,7 +13,7 @@
 
         <div class="relative w-full h-48 mb-4 overflow-hidden rounded">
           <img
-            :src="bem.imageUrl || placeholderImage"
+            :src="bem.image || placeholderImage"
             alt="Imagem da viatura"
             class="object-cover w-full h-full transition-transform duration-300 transform hover:scale-105"
           />
@@ -28,10 +28,10 @@
         <p><strong>Cor:</strong> {{ bem.cor }}</p>
         <p><strong>Transmissão:</strong> {{ bem.transmissao }}</p>
         <p><strong>Combustível:</strong> {{ bem.combustivel }}</p>
-<p><strong>Preço diário:</strong> {{ typeof bem.preco_diario === 'number' ? bem.preco_diario.toFixed(2) : (typeof bem.preco_diario === 'string' ? bem.preco_diario : 'N/D') }} €</p>
+        <p><strong>Preço diário:</strong> {{ typeof bem.preco_diario === 'number' ? bem.preco_diario.toFixed(2) : (typeof bem.preco_diario === 'string' ? bem.preco_diario : 'N/D') }} €</p>
 
         <Link
-          :href="route('vehicles.show', bem.id)"
+          :href="route('publico.vehicles.show', bem.id)"
           class="inline-block mt-4 text-sm text-blue-600 hover:underline"
         >
           Ver detalhes
@@ -48,7 +48,10 @@
 
 <script setup>
 import { ref } from 'vue';
-import { usePage, Link } from '@inertiajs/inertia-vue3';
+import { usePage, Link } from '@inertiajs/vue3';
+import GuestLayout from '@/Layouts/GuestLayout.vue';
+
+defineOptions({ layout: GuestLayout });
 
 defineProps({
   bens: Array,
@@ -67,7 +70,7 @@ function handleReservarClick(bemId) {
   } else {
     // Proceed with reservation logic or navigation
     // For now, navigate to vehicle details page as placeholder
-    window.location.href = route('vehicles.show', bemId);
+    window.location.href = route('publico.vehicles.show', bemId);
   }
 }
 </script>

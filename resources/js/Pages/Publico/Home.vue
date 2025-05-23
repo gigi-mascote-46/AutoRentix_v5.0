@@ -78,21 +78,24 @@ import GuestLayout from '@/Layouts/GuestLayout.vue';
 
 defineOptions({ layout: GuestLayout });
 
+// declaração de variáveis reativas
+// para os carros em destaque e comentários
+// e inicialização com dados de exemplo
 const cars = ref([
   {
     name: 'Fiat 500',
     description: 'Compacto, econômico e perfeito para a cidade.',
-    image: '/images/fiat500.jpg',
+    image: '/v_home/fiat500.jpg',
   },
   {
     name: 'BMW Série 3',
     description: 'Conforto e desempenho para viagens longas.',
-    image: '/images/bmw3.jpg',
+    image: '/v_home/bmw3.jpeg',
   },
   {
     name: 'Audi A4',
     description: 'Luxo e tecnologia em cada detalhe.',
-    image: '/images/audia4.jpg',
+    image: '/v_home/audia4.jpeg',
   },
 ]);
 
