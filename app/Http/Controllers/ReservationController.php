@@ -12,7 +12,7 @@ class ReservationController extends Controller
     public function index()
     {
         $reservations = Reservation::where('user_id', Auth::id())->with('bemLocavel')->get();
-        return Inertia::render('MyReservations/Index', compact('reservations'));
+        return Inertia::render('Pages\AreaCliente\MyReservations\Index', compact('reservations'));
     }
 
     public function show($id)
@@ -22,7 +22,7 @@ class ReservationController extends Controller
             ->with('bemLocavel')
             ->firstOrFail();
 
-        return Inertia::render('MyReservations/Show', compact('reservation'));
+        return Inertia::render('Pages\AreaCliente\MyReservations\Show', compact('reservation'));
     }
 
     public function create()
@@ -31,7 +31,7 @@ class ReservationController extends Controller
         // Exemplo: lista de bens disponíveis
         // Supondo que tenhas um método em BemLocavel para filtrar
         $bens = \App\Models\BemLocavel::where('manutencao', false)->get();
-        return Inertia::render('MyReservations/Create', compact('bens'));
+        return Inertia::render('Pages\AreaCliente\MyReservations\Create', compact('bens'));
     }
 
     public function store(Request $request)

@@ -33,4 +33,9 @@ class BemLocavel extends Model
     {
         return $this->hasMany(Reservation::class, 'bem_locavel_id');
     }
+
+    public function photos()
+    {
+        return $this->hasMany(BemLocavelPhoto::class, 'bem_locavel_id');
+    }
 }

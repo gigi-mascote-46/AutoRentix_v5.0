@@ -29,8 +29,13 @@ class AdminController
                 ];
             });
 
-        return Inertia::render('Admin/Dashboard', [
+        return Inertia::render('AreaAdmin/Admin/Dashboard', [
             'upcomingReservations' => $upcomingReservations,
+            'stats' => [
+                'vehicles' => \App\Models\BemLocavel::count(),
+                'users' => \App\Models\User::count(),
+                'activeReservations' => \App\Models\Reservation::where('data_fim', '>=', \Carbon\Carbon::today())->count(),
+            ],
         ]);
     }
 }

@@ -1,4 +1,4 @@
-Resumo com estatísticas, reservas ativas, etc.
+//Resumo com estatísticas, reservas ativas, etc.
 
 <template>
   <div>

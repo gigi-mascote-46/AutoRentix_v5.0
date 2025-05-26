@@ -16,6 +16,6 @@ class VehicleController extends Controller
     public function show($id)
     {
         $bem = BemLocavel::with('marca', 'caracteristicas', 'localizacao')->findOrFail($id);
-        return Inertia::render('AreaAdmin/Admin/Vehicles/Index', compact('bem'));
+        return Inertia::render('Pages\Publico\Vehicles\Show', compact('bem'));
     }
 }
