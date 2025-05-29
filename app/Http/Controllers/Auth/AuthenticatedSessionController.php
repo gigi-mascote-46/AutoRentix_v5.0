@@ -7,6 +7,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -39,11 +40,13 @@ class AuthenticatedSessionController extends Controller
 
             $user = Auth::user();
 
-            if ($user && $user->is_admin) {
-                return redirect()->intended(route('admin.dashboard', absolute: false));
+            \Log::info('User role at login: ' . ($user ? $user->role : 'no user'));
+
+            if ($user && $user->role === 'admin') {
+                return redirect(route('admin.dashboard', absolute: false));
             }
 
-            return redirect()->intended(route('dashboard', absolute: false));
+            return redirect(route('areacliente.dashboard', absolute: false));
         }
 
         return back()->withErrors([

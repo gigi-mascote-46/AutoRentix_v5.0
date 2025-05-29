@@ -42,8 +42,8 @@ Route::name('publico.')->group(function () {
 // o path da rota é /resources/js/Pages/AreaCliente
 
 Route::middleware(['auth', 'verified'])->prefix('areacliente')->name('areacliente.')->group(function () {
-    Route::get('/', fn () => Inertia::render('AreaCliente/Dashboard'))->name('dashboard');
-    Route::get('/dashboard', fn () => Inertia::render('AreaCliente/Dashboard'))->name('dashboard');
+    Route::get('/', fn () => Inertia::render('Publico/Home'))->name('home');
+    Route::get('/dashboard', [PageController::class, 'clientDashboard'])->name('dashboard');
     Route::get('/perfil', fn () => Inertia::render('AreaCliente/Profile'))->name('profile');
     Route::get('/minhas-reservas', [ReservationController::class, 'index'])->name('my_reservations.index');
     Route::get('/minhas-reservas/{id}', [ReservationController::class, 'show'])->name('my_reservations.show');

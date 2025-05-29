@@ -16,7 +16,7 @@
         </template>
 
         <template v-else>
-          <Link href="/areacliente" class="font-semibold text-blue-600 hover:underline">Dashboard</Link>
+          <Link href="/areacliente/dashboard" class="font-semibold text-blue-600 hover:underline">Dashboard</Link>
           <button @click="logout" class="text-red-600 hover:underline">Sair</button>
         </template>
       </nav>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Inertia\Inertia;
+use Illuminate\Http\Request;
 
 class AdminUserController extends Controller
 {
@@ -27,7 +28,7 @@ class AdminUserController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => "required|email|unique:users,email,$id",
-            'is_admin' => 'boolean',
+            'role' => 'required|string|in:user,admin',
         ]);
 
         $user->update($validated);
