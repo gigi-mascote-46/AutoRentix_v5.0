@@ -69,8 +69,8 @@ Route::middleware(['auth', 'verified'])->prefix('areacliente')->name('areaclient
 // 🔐 Área de administração
 // o path da rota é /resources/js/Pages/AreaAdmin
 
-Route::middleware(['web', 'auth', \App\Http\Middleware\AdminMiddleware::class])->group(function () {
-    Route::get('/areaAdmin', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+Route::prefix('areaAdmin')->middleware(['web', 'auth', \App\Http\Middleware\AdminMiddleware::class])->group(function () {
+    Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
     // Viaturas para o admin
     Route::get('/viaturas', [AdminVehicleController::class, 'index'])->name('admin.vehicles.index');

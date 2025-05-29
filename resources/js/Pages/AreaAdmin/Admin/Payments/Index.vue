@@ -1,7 +1,7 @@
 <!-- Ver pagamentos -->
 <template>
   <div>
-    <h1>Admin - Lista de Pagamentos</h1>
+    <h1>Lista de Pagamentos</h1>
     <table class="min-w-full border border-collapse border-gray-300">
       <thead>
         <tr>

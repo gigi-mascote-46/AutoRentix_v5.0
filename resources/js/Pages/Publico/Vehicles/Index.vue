@@ -2,9 +2,9 @@
   <div>
     <h1 class="mb-6 text-2xl font-bold">Viaturas Disponíveis para Aluguer</h1>
 
-    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
         <div
-          v-for="bem in bens"
+          v-for="bem in bens.slice(0, 25)"
           :key="bem.id"
           class="p-4 transition bg-white border rounded-lg shadow hover:shadow-md"
         >
@@ -13,14 +13,6 @@
 
           <div class="relative w-full h-48 mb-4 overflow-hidden rounded">
             <img
-              v-if="bem.photos && bem.photos.length > 0"
-              :src="`/storage/${bem.photos[0].photo_path}`"
-              alt="Imagem da viatura"
-              class="object-cover w-full h-full transition-transform duration-300 transform hover:scale-105"
-              @error="event => event.target.src = placeholderImage"
-            />
-            <img
-              v-else
               :src="placeholderImage"
               alt="Imagem da viatura"
               class="object-cover w-full h-full transition-transform duration-300 transform hover:scale-105"
@@ -65,41 +57,7 @@ defineProps({
   bens: Array,
 });
 
-const placeholderImage = '/images/placeholder-car.png'; // Ensure this path is valid and image exists
-
-// Mapping from modelo_cor to full image filename including year and extension
-const imageMap = {
-  'captur_preto': 'captur_preto_2020.jpeg',
-  'captur_red': 'captur_red_2021.jpeg',
-  'civic_blue': 'civic_blue_2021.jpeg',
-  'civic_grey': 'civic_grey_2020.jpeg',
-  'clio_blue': 'clio_blue_2021.jpeg',
-  'clio_white': 'clio_white_2020.jpeg',
-  'corolla_grey': 'corolla_grey_2022.jpg',
-  'corolla_white': 'corolla_white_2020.jpg',
-  'ecosport_black': 'ecosport_black_2020.jpeg',
-  'ecosport_white': 'ecosport_white_2022.jpeg',
-  'fiesta_blue': 'fiesta_blue_2022.jpeg',
-  'fiesta_red': 'fiesta_red_2020.jpeg',
-  'fit_red': 'fit_red_2020.jpeg',
-  'fit_white': 'fit_white_2022.jpeg',
-  'focus_black': 'focus_black_2021.jpeg',
-  'focus_white': 'focus_white_2020.jpg',
-  'golf_black': 'golf_black_2022.jpeg',
-  'golf_grey': 'golf_grey_2020.jpeg',
-  'hrv_black': 'hrv_black_2020.jpeg',
-  'hrv_grey': 'hrv_grey_2021.jpeg',
-  'megane_blue': 'megane_blue_2020.jpeg',
-  'megane_grey': 'megane_grey_2020.jpeg',
-  'polo_grey': 'polo_grey_2022.jpeg',
-  'polo_red': 'polo_red_2020.jpeg',
-  'rav4_preto': 'rav4_preto_2023.jpeg',
-  'rav4_white': 'rav4_white_2024.jpeg',
-  'tiguan_black': 'tiguan_black_2022.jpeg',
-  'tiguan_blue': 'tiguan_blue_2020.jpeg',
-  'yaris_blue': 'yaris_blue_2021.jpg',
-  'yaris_red': 'yaris_red_2021.jpg',
-};
+const placeholderImage = '/images/placeholder-car.jpg';
 
 const page = usePage();
 const user = page.props.auth.user || null;
@@ -121,13 +79,5 @@ function normalizeString(str) {
   return str.toLowerCase().replace(/[^a-z0-9]/g, '');
 }
 
-// Function to get image path for a given bem
-function getImagePath(bem) {
-  const key = `${bem.modelo}_${bem.cor}`;
-  const filename = imageMap[key] || null;
-  if (filename) {
-    return `/vehicles/${filename}`;
-  }
-  return placeholderImage;
-}
+// Removed imageMap and getImagePath function as they are no longer needed
 </script>

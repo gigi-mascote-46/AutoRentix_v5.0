@@ -11,7 +11,7 @@ class AdminPaymentController extends Controller
     public function index()
     {
         $payments = Payment::with('reservation')->get();
-        return Inertia::render('Admin/Payments/Index', compact('payments'));
+        return Inertia::render('AreaAdmin/Admin/Payments/Index', compact('payments'));
     }
 
     public function show($id)

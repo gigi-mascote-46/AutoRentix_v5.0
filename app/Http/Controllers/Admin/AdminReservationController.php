@@ -12,7 +12,7 @@ class AdminReservationController extends Controller
     public function index()
     {
         $reservations = Reservation::with('user', 'bemLocavel')->get();
-        return Inertia::render('Admin/Reservations/Index', compact('reservations'));
+        return Inertia::render('AreaAdmin/Admin/Reservations/Index', compact('reservations'));
     }
 
     public function show($id)

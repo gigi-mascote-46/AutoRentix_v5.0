@@ -12,7 +12,7 @@ class AdminUserController extends Controller
     public function index()
     {
         $users = User::all();
-        return Inertia::render('Admin/Users/Index', compact('users'));
+        return Inertia::render('AreaAdmin/Admin/Users/Index', compact('users'));
     }
 
     public function edit($id)
