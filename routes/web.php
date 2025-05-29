@@ -19,6 +19,13 @@ use App\Http\Middleware\Authenticate as UserAuthenticate;
 
 require __DIR__.'/auth.php';
 
+// ----------------------------------------------------------//
+// 🌐 Páginas de teste para middleware
+Route::get('/teste-admin', function () {
+    return 'Middleware OK';
+})->middleware(AdminMiddleware::class);
+
+// ----------------------------------------------------------//
 
 // 🌐 Páginas públicas - resources/js/Pages/Publico
 // o path da rota é /resources/js/Pages/Publico
@@ -62,8 +69,8 @@ Route::middleware(['auth', 'verified'])->prefix('areacliente')->name('areaclient
 // 🔐 Área de administração
 // o path da rota é /resources/js/Pages/AreaAdmin
 
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+Route::middleware(['web', 'auth', \App\Http\Middleware\AdminMiddleware::class])->group(function () {
+    Route::get('/areaAdmin', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
     // Viaturas para o admin
     Route::get('/viaturas', [AdminVehicleController::class, 'index'])->name('vehicles.index');

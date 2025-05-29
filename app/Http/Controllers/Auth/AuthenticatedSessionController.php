@@ -42,10 +42,14 @@ class AuthenticatedSessionController extends Controller
 
             \Log::info('User role at login: ' . ($user ? $user->role : 'no user'));
 
-            if ($user && $user->role === 'admin') {
-                return redirect(route('admin.dashboard', absolute: false));
-            }
+            // if ($user && $user->role === 'admin') {
+            //     return redirect(route('admin.dashboard', absolute: false));
+            // }
 
+            if ($user && $user->role === 'admin') {
+    \Log::info('Redirecting admin to admin.dashboard');
+    return redirect('/areaAdmin'); // rota direta
+}
             return redirect(route('areacliente.dashboard', absolute: false));
         }
 

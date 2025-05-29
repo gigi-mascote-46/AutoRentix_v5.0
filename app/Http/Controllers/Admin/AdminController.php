@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use Inertia\Inertia;
 use App\Models\Reservation;
 use Carbon\Carbon;
 
-class AdminController
+class AdminController extends Controller
 {
     public function dashboard()
     {

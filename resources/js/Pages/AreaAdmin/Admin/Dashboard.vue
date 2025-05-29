@@ -41,7 +41,10 @@
 
 <script setup>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
-defineOptions({ layout: AdminLayout });
+
+definePageMeta({
+  layout: AdminLayout,
+});
 
 defineProps({
   stats: Object,

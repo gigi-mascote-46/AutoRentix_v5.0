@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+import GuestLayout from '@/Layouts/GuestLayout.vue';
 
 const form = ref({
   name: '',
@@ -44,6 +45,8 @@ function submitForm() {
     date: '',
   };
 }
+
+defineOptions({ layout: GuestLayout });
 </script>
 
 <template>
@@ -78,8 +81,4 @@ function submitForm() {
     <div v-if="successMessage" class="mt-4 font-semibold text-green-600">{{ successMessage }}</div>
   </div>
 </template>
-<script setup>
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-defineOptions({ layout: GuestLayout });
-</script>
 
