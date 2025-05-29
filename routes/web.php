@@ -73,21 +73,21 @@ Route::middleware(['web', 'auth', \App\Http\Middleware\AdminMiddleware::class])-
     Route::get('/areaAdmin', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
     // Viaturas para o admin
-    Route::get('/viaturas', [AdminVehicleController::class, 'index'])->name('vehicles.index');
-    Route::get('/viaturas/criar', [AdminVehicleController::class, 'create'])->name('vehicles.create');
-    Route::post('/viaturas', [AdminVehicleController::class, 'store'])->name('vehicles.store');
-    Route::get('/viaturas/{id}/editar', [AdminVehicleController::class, 'edit'])->name('vehicles.edit');
-    Route::put('/viaturas/{id}', [AdminVehicleController::class, 'update'])->name('vehicles.update');
-    Route::delete('/viaturas/{id}', [AdminVehicleController::class, 'destroy'])->name('vehicles.destroy');
+    Route::get('/viaturas', [AdminVehicleController::class, 'index'])->name('admin.vehicles.index');
+    Route::get('/viaturas/criar', [AdminVehicleController::class, 'create'])->name('admin.vehicles.create');
+    Route::post('/viaturas', [AdminVehicleController::class, 'store'])->name('admin.vehicles.store');
+    Route::get('/viaturas/{id}/editar', [AdminVehicleController::class, 'edit'])->name('admin.vehicles.edit');
+    Route::put('/viaturas/{id}', [AdminVehicleController::class, 'update'])->name('admin.vehicles.update');
+    Route::delete('/viaturas/{id}', [AdminVehicleController::class, 'destroy'])->name('admin.vehicles.destroy');
 
     // Utilizadores
-    Route::get('/utilizadores', [AdminUserController::class, 'index'])->name('users.index');
+    Route::get('/utilizadores', [AdminUserController::class, 'index'])->name('admin.users.index');
 
     // Reservas
-    Route::get('/reservas', [AdminReservationController::class, 'index'])->name('reservations.index');
+    Route::get('/reservas', [AdminReservationController::class, 'index'])->name('admin.reservations.index');
 
     // Pagamentos
-    Route::get('/pagamentos', [AdminPaymentController::class, 'index'])->name('payments.index');
+    Route::get('/pagamentos', [AdminPaymentController::class, 'index'])->name('admin.payments.index');
 
     // Relatórios
     Route::get('/relatorios', function () {

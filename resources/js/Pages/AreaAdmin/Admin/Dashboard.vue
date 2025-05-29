@@ -39,15 +39,17 @@
   </div>
 </template>
 
-<script setup>
+<script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 
-definePageMeta({
+export default {
   layout: AdminLayout,
-});
-
-defineProps({
-  stats: Object,
-  upcomingReservations: Array,
-});
+  props: {
+    stats: Object,
+    upcomingReservations: Array,
+  },
+  setup() {
+    // Remove any usage of definePageMeta or similar here
+  }
+};
 </script>
