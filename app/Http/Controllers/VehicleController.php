@@ -16,6 +16,7 @@ class VehicleController extends Controller
     public function show($id)
     {
         $bem = BemLocavel::with('marca', 'caracteristicas', 'localizacao')->findOrFail($id);
-        return Inertia::render('Pages\Publico\Vehicles\Show', compact('bem'));
+        $reservations = \App\Models\Reservation::where('bem_locavel_id', $id)->get();
+        return Inertia::render('Publico/Vehicles/Show', compact('bem', 'reservations'));
     }
 }
