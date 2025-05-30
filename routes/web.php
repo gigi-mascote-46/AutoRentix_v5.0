@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminReservationController;
 use App\Http\Controllers\Admin\AdminPaymentController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\PayPalController;
 // admin middleware
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\Authenticate;
@@ -63,6 +64,15 @@ Route::middleware(['auth', 'verified'])->prefix('areacliente')->name('areaclient
     Route::get('/viaturas/{id}/reservar/confirmar', [ReservationController::class, 'confirm'])->name('vehicles.reserve.confirm');
     Route::get('/viaturas/{id}/reservar/pagamento', [ReservationController::class, 'payment'])->name('vehicles.reserve.payment');
     Route::post('/viaturas/{id}/reservar/pagamento', [ReservationController::class, 'processPayment'])->name('vehicles.reserve.payment.process');
+});
+
+// PayPal payment routes
+Route::prefix('paypal')->name('paypal.')->group(function () {
+    Route::get('/transaction', [PayPalController::class, 'createTransaction'])->name('createTransaction');
+    Route::post('/transaction/process', [PayPalController::class, 'processTransaction'])->name('processTransaction');
+    Route::get('/transaction/success', [PayPalController::class, 'successTransaction'])->name('successTransaction');
+    Route::get('/transaction/cancel', [PayPalController::class, 'cancelTransaction'])->name('cancelTransaction');
+    Route::get('/transaction/finish', [PayPalController::class, 'finishTransaction'])->name('finishTransaction');
 });
 
 // ----------------------------------------------------------//

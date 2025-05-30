@@ -19,7 +19,7 @@ class ReservationFactory extends Factory
 
         return [
             'user_id' => User::factory(),
-            'bem_locavel_id' => BemLocavel::factory(),
+            'registo_unico_publico' => BemLocavel::inRandomOrder()->value('registo_unico_publico'),
             'data_inicio' => $startDate->format('Y-m-d'),
             'data_fim' => $endDate->format('Y-m-d'),
             'status' => $this->faker->randomElement(['pendente', 'confirmada', 'cancelada']),

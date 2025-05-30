@@ -21,7 +21,7 @@ class BemLocavel extends Model
 
     public function localizacao()
     {
-        return $this->hasOne(Localizacao::class, 'bem_locavel_id');
+        return $this->hasOne(Localizacao::class, 'registo_unico_publico', 'registo_unico_publico');
     }
 
     public function caracteristicas()
@@ -31,7 +31,7 @@ class BemLocavel extends Model
 
     public function reservas()
     {
-        return $this->hasMany(Reservation::class, 'bem_locavel_id');
+        return $this->hasMany(Reservation::class, 'registo_unico_publico', 'registo_unico_publico');
     }
 
     public function photos()

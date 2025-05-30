@@ -17,6 +17,8 @@ class DatabaseSeeder extends Seeder
             LocalizacaoSeeder::class,
             CaracteristicaSeeder::class,
             BemCaracteristicaSeeder::class,
+            AdminUserSeeder::class,
+            ReservationSeeder::class,
         ]);
     }
 }
