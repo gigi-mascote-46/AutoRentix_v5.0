@@ -23,11 +23,12 @@
     </header>
 
     <!-- Main content -->
-    <main class="flex-grow p-6 mx-auto max-w-7xl">
+    <main class="flex-grow w-full p-6">
       <slot />
     </main>
 
     <!-- Footer -->
+
     <footer class="p-4 text-sm text-center text-gray-600 bg-gray-100">
       &copy; {{ new Date().getFullYear() }} AutoRentix. Todos os direitos reservados.
     </footer>
