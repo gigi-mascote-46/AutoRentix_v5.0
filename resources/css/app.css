@@ -1,3 +1,150 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* Estilos base globais */
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        @apply font-sans antialiased;
+        @apply bg-user-background text-user-text;
+    }
+
+    /* Scrollbar personalizada */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        @apply bg-gray-100;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        @apply bg-gray-300 rounded-full;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        @apply bg-gray-400;
+    }
+}
+
+/* Componentes reutilizáveis */
+@layer components {
+    /* Botões base */
+    .btn-base {
+        @apply inline-flex items-center justify-center px-4 py-2 font-medium transition-all duration-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+    }
+
+    .btn-primary {
+        @apply text-white btn-base bg-user-primary hover:bg-user-action focus:ring-user-primary;
+    }
+
+    .btn-secondary {
+        @apply btn-base bg-user-secondary text-user-text hover:bg-yellow-500 focus:ring-user-secondary;
+    }
+
+    .btn-admin-primary {
+        @apply text-white btn-base bg-admin-primary hover:bg-blue-900 focus:ring-admin-primary;
+    }
+
+    .btn-admin-secondary {
+        @apply text-white btn-base bg-admin-secondary hover:bg-orange-600 focus:ring-admin-secondary;
+    }
+
+    .btn-admin-highlight {
+        @apply text-white btn-base bg-admin-highlight hover:bg-admin-highlight-hover focus:ring-admin-highlight;
+    }
+
+    /* Cards */
+    .card {
+        @apply overflow-hidden bg-white border border-gray-100 rounded-xl shadow-soft;
+    }
+
+    .card-admin {
+        @apply overflow-hidden bg-white border border-gray-200 rounded-xl shadow-soft;
+    }
+
+    /* Inputs */
+    .input-base {
+        @apply block w-full transition-colors duration-200 border-gray-300 rounded-lg shadow-sm focus:border-user-primary focus:ring-user-primary;
+    }
+
+    .input-admin {
+        @apply block w-full transition-colors duration-200 border-gray-300 rounded-lg shadow-sm focus:border-admin-primary focus:ring-admin-primary;
+    }
+
+    /* Navegação */
+    .nav-link {
+        @apply px-3 py-2 text-sm font-medium transition-colors duration-200 rounded-md;
+    }
+
+    .nav-link-active {
+        @apply text-white nav-link bg-user-primary;
+    }
+
+    .nav-link-inactive {
+        @apply nav-link text-user-text hover:text-user-primary hover:bg-gray-50;
+    }
+
+    .nav-link-admin-active {
+        @apply text-white nav-link bg-admin-primary;
+    }
+
+    .nav-link-admin-inactive {
+        @apply nav-link text-admin-text hover:text-admin-primary hover:bg-admin-background;
+    }
+
+    /* Gradientes */
+    .gradient-user {
+        background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+    }
+
+    .gradient-admin {
+        background: linear-gradient(135deg, #1E3A8A 0%, #065F46 100%);
+    }
+
+    /* Animações */
+    .animate-fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .animate-slide-up {
+        animation: slideUp 0.3s ease-out;
+    }
+
+    .animate-scale-in {
+        animation: scaleIn 0.2s ease-out;
+    }
+}
+
+/* Utilitários */
+@layer utilities {
+    .text-balance {
+        text-wrap: balance;
+    }
+
+    .bg-pattern {
+        background-image: radial-gradient(circle at 1px 1px, rgba(59, 130, 246, 0.1) 1px, transparent 0);
+        background-size: 20px 20px;
+    }
+
+    .bg-pattern-admin {
+        background-image: radial-gradient(circle at 1px 1px, rgba(30, 58, 138, 0.1) 1px, transparent 0);
+        background-size: 20px 20px;
+    }
+}
+
+/* Responsividade melhorada */
+@media (max-width: 640px) {
+    .container {
+        @apply px-4;
+    }
+}
+
+/* Dark mode support (futuro) */
+@media (prefers-color-scheme: dark) {
+    /* Preparação para modo escuro */
+}

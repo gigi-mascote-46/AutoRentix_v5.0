@@ -1,117 +1,219 @@
 <!-- Página inicial com destaque das viaturas e call-to-action -->
 <template>
-  <div>
-    <!-- Custom Navbar -->
-    <!-- <nav class="flex justify-center p-4 space-x-8 bg-center bg-no-repeat"
-     style="background-image: url('/images/autorentix_logo.png'); background-size: cover; width: 100%; height: 100%;">   -->
+  <GuestLayout>
+    <div class="min-h-screen bg-gradient-to-br from-blue-500 to-blue-700">
+    <!-- Hero Section -->
+      <div class="relative overflow-hidden">
+        <div class="px-4 py-16 mx-auto max-w-7xl sm:px-6 lg:px-8 lg:py-24">
+          <div class="grid items-center grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
+            <!-- Left Content -->
+            <div class="space-y-6 text-white">
+              <h1 class="text-4xl font-bold leading-tight lg:text-5xl xl:text-6xl">
+              Alugue a viatura
+                <span class="text-yellow-300">perfeita</span> para
+                a sua viagem
+            </h1>
+              <p class="max-w-lg text-lg text-blue-100 lg:text-xl">
+                Descubra a nossa frota de viaturas premium e desfrute de uma
+                experiência de condução inesquecível.
+            </p>
 
-      <!-- <inertia-link href="/sobre" class="font-semibold text-gray-700 hover:text-blue-600">Sobre</inertia-link>
-      <inertia-link href="/viaturas" class="font-semibold text-gray-700 hover:text-blue-600">Viaturas</inertia-link>
-      <inertia-link href="/login" class="font-semibold text-gray-700 hover:text-blue-600">Entrar</inertia-link>
-      <inertia-link href="/register" class="font-semibold text-gray-700 hover:text-blue-600">Registar</inertia-link> -->
-    <!-- </nav> -->
+              <!-- CTA Buttons -->
+              <div class="flex flex-col gap-4 pt-4 sm:flex-row">
+                <Link
+                  :href="route('vehicles.index')"
+                  class="inline-flex items-center justify-center px-8 py-3 font-semibold text-blue-900 transition-colors duration-200 bg-yellow-400 rounded-lg hover:bg-yellow-500"
+                >
+                  Ver Viaturas
+                </Link>
+                <Link
+                  :href="route('about')"
+                  class="inline-flex items-center justify-center px-8 py-3 font-semibold text-white transition-colors duration-200 border-2 border-white rounded-lg hover:bg-white hover:text-blue-700"
+                >
+                  Saber Mais
+                </Link>
+            </div>
+          </div>
 
-    <!-- Carousel -->
-    <section class="max-w-6xl mx-auto my-8">
-      <h2 class="mb-4 text-2xl font-bold text-center">Viaturas em Destaque</h2>
-      <div class="relative overflow-hidden rounded-lg shadow-lg">
-        <div class="flex transition-transform duration-500" :style="{ transform: `translateX(-${currentSlide * 100}%)` }">
-          <div v-for="(car, index) in cars" :key="index" class="min-w-full">
-            <img :src="car.image" :alt="car.name" class="object-cover w-full h-64 rounded-t-lg" />
-            <div class="p-4 bg-white rounded-b-lg">
-              <h3 class="text-xl font-semibold">{{ car.name }}</h3>
-              <p class="text-gray-600">{{ car.description }}</p>
+            <!-- Right Content - Search Form -->
+            <div class="w-full max-w-md mx-auto lg:mx-0 lg:max-w-none">
+              <div class="p-6 bg-white shadow-2xl rounded-xl lg:p-8">
+                <h3 class="mb-6 text-xl font-semibold text-gray-900">
+                  Viatura ou Destino?
+                </h3>
+
+                <form @submit.prevent="searchVehicles" class="space-y-4">
+                  <!-- Location -->
+                  <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-700">
+                      Localização
+                    </label>
+                    <select
+                      v-model="searchForm.localizacao_id"
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                      <option value="">Selecione uma localização</option>
+                      <option v-for="location in locations" :key="location.id" :value="location.id">
+                        {{ location.nome }}
+                      </option>
+                    </select>
+      </div>
+
+                  <!-- Vehicle Type -->
+        <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-700">
+                      Tipo de Viatura
+                    </label>
+                    <select
+                      v-model="searchForm.tipo_bem_id"
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                      <option value="">Todos os tipos</option>
+                      <option v-for="type in vehicleTypes" :key="type.id" :value="type.id">
+                        {{ type.nome }}
+                      </option>
+                    </select>
+        </div>
+
+                  <!-- Date Range -->
+                  <div class="grid grid-cols-2 gap-4">
+        <div>
+                      <label class="block mb-2 text-sm font-medium text-gray-700">
+                        Data Início
+                      </label>
+                      <input
+                        type="date"
+                        v-model="searchForm.data_inicio"
+                        :min="today"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      >
+        </div>
+        <div>
+                      <label class="block mb-2 text-sm font-medium text-gray-700">
+                        Data Fim
+                      </label>
+                      <input
+                        type="date"
+                        v-model="searchForm.data_fim"
+                        :min="searchForm.data_inicio || today"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      >
+        </div>
+                  </div>
+
+                  <!-- Search Button -->
+                  <button
+                    type="submit"
+                    class="flex items-center justify-center w-full px-6 py-3 font-semibold text-white transition-colors duration-200 bg-blue-600 rounded-lg hover:bg-blue-700"
+                  >
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    Pesquisar Viaturas
+                  </button>
+                </form>
+        </div>
+      </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Features Section -->
+      <div class="py-16 bg-white">
+        <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+          <div class="mb-12 text-center">
+            <h2 class="mb-4 text-3xl font-bold text-gray-900">
+              Porquê escolher AutoRentix?
+            </h2>
+            <p class="max-w-2xl mx-auto text-lg text-gray-600">
+              Oferecemos a melhor experiência de aluguer de viaturas com serviço premium e preços competitivos.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
+            <!-- Feature 1 -->
+            <div class="p-6 text-center">
+              <div class="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-blue-100 rounded-full">
+                <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+              <h3 class="mb-2 text-xl font-semibold text-gray-900">Qualidade Garantida</h3>
+              <p class="text-gray-600">Todas as nossas viaturas são inspecionadas e mantidas nos mais altos padrões de qualidade.</p>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="p-6 text-center">
+              <div class="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-blue-100 rounded-full">
+                <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                </svg>
+              </div>
+              <h3 class="mb-2 text-xl font-semibold text-gray-900">Preços Competitivos</h3>
+              <p class="text-gray-600">Oferecemos os melhores preços do mercado sem comprometer a qualidade do serviço.</p>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="p-6 text-center">
+              <div class="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-blue-100 rounded-full">
+                <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M12 2.25a9.75 9.75 0 109.75 9.75A9.75 9.75 0 0012 2.25z"></path>
+                </svg>
+              </div>
+              <h3 class="mb-2 text-xl font-semibold text-gray-900">Suporte 24/7</h3>
+              <p class="text-gray-600">Nossa equipe está disponível 24 horas por dia para ajudá-lo em qualquer situação.</p>
             </div>
           </div>
         </div>
-        <button @click="prevSlide" class="absolute p-2 transform -translate-y-1/2 bg-white bg-opacity-75 rounded-full shadow top-1/2 left-2 hover:bg-opacity-100">‹</button>
-        <button @click="nextSlide" class="absolute p-2 transform -translate-y-1/2 bg-white bg-opacity-75 rounded-full shadow top-1/2 right-2 hover:bg-opacity-100">›</button>
       </div>
-    </section>
-
-    <!-- Comments -->
-    <section class="max-w-4xl mx-auto my-8">
-      <h2 class="mb-4 text-2xl font-bold text-center">O que dizem os nossos clientes</h2>
-      <div class="space-y-6">
-        <div v-for="(comment, index) in comments" :key="index" class="p-4 bg-white border rounded shadow-sm">
-          <p class="italic">"{{ comment.text }}"</p>
-          <p class="mt-2 font-semibold text-right">- {{ comment.author }}</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="p-6 mt-12 text-gray-700 bg-gray-100">
-      <div class="grid max-w-6xl grid-cols-1 gap-8 mx-auto md:grid-cols-4">
-        <div>
-          <h3 class="mb-2 font-bold">Morada</h3>
-          <p>Rua Exemplo, 123<br />Lisboa, Portugal</p>
-        </div>
-        <div>
-          <h3 class="mb-2 font-bold">Contactos</h3>
-          <p>Telefone: +351 123 456 789<br />Email: info@autorentix.pt</p>
-        </div>
-        <div>
-          <h3 class="mb-2 font-bold">Redes Sociais</h3>
-          <ul class="space-y-1">
-            <li><a href="http://facebook.com" class="hover:underline">Facebook</a></li>
-            <li><a href="http://instagram.com" class="hover:underline">Instagram</a></li>
-          </ul>
-        </div>
-        <div>
-          <h3 class="mb-2 font-bold">Ajuda & Políticas</h3>
-          <ul class="space-y-1">
-            <li><a href="help" class="hover:underline">Ajuda</a></li>
-            <li><a href="complaint" class="hover:underline">Reclamação</a></li>
-            <li><a href="terms" class="hover:underline">Termos e Condições</a></li>
-            <li><a href="refund" class="hover:underline">Política de Reembolsos</a></li>
-          </ul>
-        </div>
-      </div>
-    </footer>
-  </div>
+    </div>
+  </GuestLayout>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
+import { ref, computed } from 'vue'
+import { Link, router } from '@inertiajs/vue3'
+import GuestLayout from '@/Layouts/GuestLayout.vue'
 
-defineOptions({ layout: GuestLayout });
+// Props
+defineProps({
+  locations: Array,
+  vehicleTypes: Array,
+})
 
-// declaração de variáveis reativas
-// para os carros em destaque e comentários
-// e inicialização com dados de exemplo
-const cars = ref([
-  {
-    name: 'Fiat 500',
-    description: 'Compacto, econômico e perfeito para a cidade.',
-    image: '/v_home/fiat500.jpg',
-  },
-  {
-    name: 'BMW Série 3',
-    description: 'Conforto e desempenho para viagens longas.',
-    image: '/v_home/bmw3.jpeg',
-  },
-  {
-    name: 'Audi A4',
-    description: 'Luxo e tecnologia em cada detalhe.',
-    image: '/v_home/audia4.jpeg',
-  },
-]);
+// Reactive data
+const searchForm = ref({
+  localizacao_id: '',
+  tipo_bem_id: '',
+  data_inicio: '',
+  data_fim: ''
+})
 
-const comments = ref([
-  { author: 'João Silva', text: 'Excelente serviço e atendimento!' },
-  { author: 'Maria Santos', text: 'Viaturas em ótimo estado e preços justos.' },
-  { author: 'Carlos Pereira', text: 'Recomendo a todos que procuram qualidade.' },
-]);
+// Computed
+const today = computed(() => {
+  return new Date().toISOString().split('T')[0]
+})
 
-const currentSlide = ref(0);
+// Methods
+const searchVehicles = () => {
+  const params = {}
 
-function nextSlide() {
-  currentSlide.value = (currentSlide.value + 1) % cars.value.length;
-}
+  if (searchForm.value.localizacao_id) {
+    params.localizacao_id = searchForm.value.localizacao_id
+  }
 
-function prevSlide() {
-  currentSlide.value = (currentSlide.value - 1 + cars.value.length) % cars.value.length;
+  if (searchForm.value.tipo_bem_id) {
+    params.tipo_bem_id = searchForm.value.tipo_bem_id
+  }
+
+  if (searchForm.value.data_inicio) {
+    params.data_inicio = searchForm.value.data_inicio
+  }
+
+  if (searchForm.value.data_fim) {
+    params.data_fim = searchForm.value.data_fim
+  }
+
+  router.get(route('vehicles.index'), params)
 }
 </script>

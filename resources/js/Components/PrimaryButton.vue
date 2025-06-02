@@ -1,14 +1,34 @@
 <template>
-  <button
-    type="button"
-    class="px-4 py-2 font-semibold text-white bg-blue-600 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-  >
-    <slot />
+    <button
+        :type="type"
+        :class="[
+            'btn-primary',
+            'shadow-sm hover:shadow-md transform hover:-translate-y-0.5',
+            'active:transform active:translate-y-0 active:shadow-sm',
+            { 'opacity-25': disabled },
+            additionalClasses
+        ]"
+        :disabled="disabled"
+    >
+        <slot />
   </button>
 </template>
 
 <script setup>
-// Simple PrimaryButton component for primary actions
+defineProps({
+    type: {
+        type: String,
+        default: 'submit',
+    },
+    disabled: {
+        type: Boolean,
+        default: false,
+    },
+    additionalClasses: {
+        type: String,
+        default: '',
+    },
+})
 </script>
 
 <style scoped>

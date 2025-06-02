@@ -1,25 +1,114 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\PayPalController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AdminVehicleController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminReservationController;
 use App\Http\Controllers\Admin\AdminPaymentController;
-use App\Http\Controllers\PageController;
-use App\Http\Controllers\PayPalController;
-// admin middleware
-use App\Http\Middleware\AdminMiddleware;
-use App\Http\Middleware\Authenticate;
-use App\Http\Middleware\TrustProxies;
-// user middleware
-use App\Http\Middleware\Authenticate as UserAuthenticate;
+use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+*/
+
+// Public routes
+Route::get('/', [PageController::class, 'home'])->name('home');
+Route::get('/about', [PageController::class, 'about'])->name('about');
+Route::get('/contact', [PageController::class, 'contact'])->name('contact');
+    Route::get('/help', [PageController::class, 'help'])->name('help');
+Route::get('/terms', [PageController::class, 'terms'])->name('terms');
+Route::get('/refund', [PageController::class, 'refund'])->name('refund');
+Route::get('/complaint', [PageController::class, 'complaint'])->name('complaint');
+
+// Vehicle routes (public)
+Route::get('/vehicles', [VehicleController::class, 'index'])->name('vehicles.index');
+Route::get('/vehicles/{vehicle}', [VehicleController::class, 'show'])->name('vehicles.show');
+
+// Authentication required routes
+Route::middleware('auth')->group(function () {
+    // Profile routes
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Client area routes
+    Route::get('/dashboard', function () {
+        return Inertia::render('AreaCliente/Dashboard');
+    })->name('dashboard');
+
+    Route::get('/my-profile', function () {
+        return Inertia::render('AreaCliente/Profile');
+    })->name('client.profile');
+
+    Route::get('/my-payments', function () {
+        return Inertia::render('AreaCliente/Payments');
+    })->name('client.payments');
+
+    // Reservation routes
+    Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations.index');
+    Route::get('/reservations/{reservation}', [ReservationController::class, 'show'])->name('reservations.show');
+    Route::post('/reservations', [ReservationController::class, 'store'])->name('reservations.store');
+    Route::get('/reservations/{reservation}/confirm', [ReservationController::class, 'confirm'])->name('reservations.confirm');
+    Route::post('/reservations/{reservation}/confirm', [ReservationController::class, 'processConfirmation'])->name('reservations.process');
+
+    // Payment routes
+    Route::get('/reservations/{reservation}/payment', [ReservationController::class, 'payment'])->name('reservations.payment');
+    Route::post('/reservations/{reservation}/payment', [ReservationController::class, 'processPayment'])->name('reservations.payment.process');
+
+    // PayPal routes
+    Route::post('/paypal/create-payment', [PayPalController::class, 'createPayment'])->name('paypal.create');
+    Route::get('/paypal/execute-payment', [PayPalController::class, 'executePayment'])->name('paypal.execute');
+    Route::get('/paypal/cancel-payment', [PayPalController::class, 'cancelPayment'])->name('paypal.cancel');
+
+    // Transaction routes
+    Route::get('/transaction/{reservation}', [ReservationController::class, 'transaction'])->name('reservations.transaction');
+    Route::get('/finish-transaction/{reservation}', [ReservationController::class, 'finishTransaction'])->name('reservations.finish');
+    Route::get('/reserva-confirmada/{reservation}', [ReservationController::class, 'confirmed'])->name('reservations.confirmed');
+});
+
+// Admin routes
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/reports', [AdminController::class, 'reports'])->name('reports');
+
+    // Admin vehicle management
+    Route::resource('vehicles', AdminVehicleController::class);
+
+    // Admin user management
+    Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
+    Route::get('/users/{user}', [AdminUserController::class, 'show'])->name('users.show');
+    Route::patch('/users/{user}', [AdminUserController::class, 'update'])->name('users.update');
+    Route::delete('/users/{user}', [AdminUserController::class, 'destroy'])->name('users.destroy');
+
+    // Admin reservation management
+    Route::get('/reservations', [AdminReservationController::class, 'index'])->name('reservations.index');
+    Route::get('/reservations/{reservation}', [AdminReservationController::class, 'show'])->name('reservations.show');
+    Route::patch('/reservations/{reservation}', [AdminReservationController::class, 'update'])->name('reservations.update');
+
+    // Admin payment management
+    Route::get('/payments', [AdminPaymentController::class, 'index'])->name('payments.index');
+    Route::get('/payments/{payment}', [AdminPaymentController::class, 'show'])->name('payments.show');
+});
+
+// Error pages
+Route::get('/unauthorized', function () {
+    return Inertia::render('Unauthorized');
+})->name('unauthorized');
+
+Route::fallback(function () {
+    return Inertia::render('NotFound');
+});
 
 require __DIR__.'/auth.php';
-
 // ----------------------------------------------------------//
 // 🌐 Páginas de teste para middleware
 Route::get('/teste-admin', function () {

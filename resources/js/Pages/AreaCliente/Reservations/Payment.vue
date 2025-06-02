@@ -118,7 +118,7 @@ function route(name, params) {
 
 defineOptions({ layout: GuestLayout });
 
-defineProps({
+const props = defineProps({
   bem: Object,
   dataInicio: String,
   dataFim: String,
@@ -135,6 +135,7 @@ const form = reactive({
   cartao_numero: '',
   cartao_validade: '',
   cartao_cvv: '',
+  total: props.total,
 });
 
 function generateProformaPDF() {
@@ -152,7 +153,7 @@ function generateProformaPDF() {
   doc.save('fatura_proforma_multibanco.pdf');
 }
 
-  async function submitPayment() {
+const submitPayment = async () => {
     console.log('submitPayment called');
 
     if (form.metodo_pagamento === 'referencia_multibanco') {
@@ -166,7 +167,8 @@ function generateProformaPDF() {
     }
 
     // For all payment methods except PayPal, send reservation and show success message, then redirect to home
-    await router.post(route('vehicles.reserve.payment.process', { id: form.bem.id }), form);
+    // Temporary workaround: hardcode the URL to bypass Ziggy route error
+    await router.post(`/viaturas/${props.bem.id}/reservar/pagamento`, form);
     alert('Reserva efetuada com sucesso');
     router.visit(route('home'));
   }

@@ -15,7 +15,7 @@
       <tbody>
         <tr v-for="bem in bens" :key="bem.id" class="hover:bg-gray-100">
           <td class="px-4 py-2 border border-gray-300">{{ bem.id }}</td>
-          <td class="px-4 py-2 border border-gray-300">{{ bem.marca.nome }}</td>
+          <td class="px-4 py-2 border border-gray-300">{{ bem.marca?.nome || 'N/A' }}</td>
           <td class="px-4 py-2 border border-gray-300">{{ bem.modelo }}</td>
           <td class="px-4 py-2 border border-gray-300">{{ bem.cor }}</td>
           <td class="px-4 py-2 border border-gray-300">{{ bem.preco_diario.toFixed(2) }}</td>

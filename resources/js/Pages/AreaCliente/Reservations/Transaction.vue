@@ -7,15 +7,24 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
-import { useRouter } from '@inertiajs/vue3';
+import { onMounted, defineProps } from 'vue';
+import { router } from '@inertiajs/vue3';
 
-const router = useRouter();
+const props = defineProps({
+  amount: {
+    type: Number,
+    required: true
+  }
+});
+
+const navigateToPage = (url) => {
+  router.visit(url); // Use router.visit for navigation
+};
 
 onMounted(() => {
   if (!window.paypal) {
     const script = document.createElement('script');
-    script.src = 'https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=EUR';
+    script.src = `https://www.paypal.com/sdk/js?client-id=Aef6LobGNR61jLQ4B5rxjZrtUYps8o0DFCUXMx2_65MxqlyulzEQMO8TM9F5izL9vGyzAfMgkK3LCC93&currency=EUR`;
     script.onload = renderPayPalButtons;
     document.head.appendChild(script);
   } else {
@@ -33,7 +42,7 @@ function renderPayPalButtons() {
           'Content-Type': 'application/json',
           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
         },
-        body: JSON.stringify({ amount: 1.00 }) // Adjust amount as needed or pass via props
+        body: JSON.stringify({ amount: props.amount }) // Use dynamic amount from props
       })
       .then(res => res.json())
       .then(data => {

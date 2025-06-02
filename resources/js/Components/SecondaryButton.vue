@@ -1,14 +1,34 @@
 <template>
-  <button
-    type="button"
-    class="px-4 py-2 font-semibold text-gray-700 bg-gray-200 rounded hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2"
-  >
-    <slot />
+    <button
+        :type="type"
+        :class="[
+            'btn-secondary',
+            'shadow-sm hover:shadow-md transform hover:-translate-y-0.5',
+            'active:transform active:translate-y-0 active:shadow-sm',
+            { 'opacity-25': disabled },
+            additionalClasses
+        ]"
+        :disabled="disabled"
+    >
+        <slot />
   </button>
 </template>
 
 <script setup>
-// Simple SecondaryButton component for secondary actions
+defineProps({
+    type: {
+        type: String,
+        default: 'button',
+    },
+    disabled: {
+        type: Boolean,
+        default: false,
+    },
+    additionalClasses: {
+        type: String,
+        default: '',
+    },
+})
 </script>
 
 <style scoped>
