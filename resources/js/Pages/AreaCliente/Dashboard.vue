@@ -1,23 +1,23 @@
 <!--  Painel do utilizador com resumo de reservas, saldo, etc. -->
 <template>
   <div>
-    <h1 class="mb-4 text-2xl font-bold">Bem-vindo, {{ user.name }} 👋</h1>
+    <h1 class="mb-4 text-2xl font-bold">Bem-vindo, {{ user?.name || 'Usuário' }} 👋</h1>
 
     <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
-      <div class="p-4 bg-blue-100 rounded shadow">
-        <h2 class="text-lg font-semibold">Reservas ativas</h2>
-        <p class="text-3xl">{{ stats.ativas }}</p>
-      </div>
+        <div class="p-4 bg-blue-100 rounded shadow">
+          <h2 class="text-lg font-semibold">Reservas ativas</h2>
+          <p class="text-3xl">{{ stats?.ativas || 0 }}</p>
+        </div>
 
-      <div class="p-4 bg-green-100 rounded shadow">
-        <h2 class="text-lg font-semibold">Reservas concluídas</h2>
-        <p class="text-3xl">{{ stats.concluidas }}</p>
-      </div>
+        <div class="p-4 bg-green-100 rounded shadow">
+          <h2 class="text-lg font-semibold">Reservas concluídas</h2>
+          <p class="text-3xl">{{ stats?.concluidas || 0 }}</p>
+        </div>
 
-      <div class="p-4 bg-yellow-100 rounded shadow">
-        <h2 class="text-lg font-semibold">Total gasto (€)</h2>
-        <p class="text-3xl">{{ stats.totalGasto.toFixed(2) }}</p>
-      </div>
+        <div class="p-4 bg-yellow-100 rounded shadow">
+          <h2 class="text-lg font-semibold">Total gasto (€)</h2>
+          <p class="text-3xl">{{ (stats?.totalGasto || 0).toFixed(2) }}</p>
+        </div>
     </div>
 
     <div class="mt-8">

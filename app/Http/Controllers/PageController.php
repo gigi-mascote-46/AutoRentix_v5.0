@@ -6,6 +6,9 @@ use App\Models\Localizacao;
 use App\Models\TipoBem;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Reservation;
+
 class PageController extends Controller
 {
     public function home()
@@ -46,5 +49,31 @@ class PageController extends Controller
     public function complaint()
     {
         return Inertia::render('Publico/Complaint');
+    }
+
+    public function clientDashboard()
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        $stats = [
+            'ativas' => Reservation::where('user_id', $user->id)->where('status', 'pendente')->count(),
+            'concluidas' => Reservation::where('user_id', $user->id)->where('status', 'confirmada')->count(),
+            'totalGasto' => Reservation::where('user_id', $user->id)->where('status', 'confirmada')->sum('total_price'),
+        ];
+
+        $reservasRecentes = Reservation::where('user_id', $user->id)
+            ->orderBy('data_inicio', 'desc')
+            ->take(5)
+            ->get();
+
+        return Inertia::render('AreaCliente/Dashboard', [
+            'user' => $user,
+            'stats' => $stats,
+            'reservasRecentes' => $reservasRecentes,
+        ]);
     }
 }

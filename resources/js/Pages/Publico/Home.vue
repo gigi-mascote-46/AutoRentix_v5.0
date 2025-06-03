@@ -21,7 +21,7 @@
               <!-- CTA Buttons -->
               <div class="flex flex-col gap-4 pt-4 sm:flex-row">
                 <Link
-                  :href="route('vehicles.index')"
+                  :href="route('areacliente.vehicles.index')"
                   class="inline-flex items-center justify-center px-8 py-3 font-semibold text-blue-900 transition-colors duration-200 bg-yellow-400 rounded-lg hover:bg-yellow-500"
                 >
                   Ver Viaturas
@@ -214,6 +214,6 @@ const searchVehicles = () => {
     params.data_fim = searchForm.value.data_fim
   }
 
-  router.get(route('vehicles.index'), params)
+  router.get(route('areacliente.vehicles.index'), params)
 }
 </script>
