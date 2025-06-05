@@ -14,11 +14,11 @@ class BemLocavel extends Model
     protected $fillable = [
         'nome',
         'descricao',
+        'registo_unico_publico',
         'preco_por_dia',
         'disponivel',
         'tipo_bem_id',
         'marca_id',
-        'localizacao_id',
         'modelo',
         'ano',
         'matricula',

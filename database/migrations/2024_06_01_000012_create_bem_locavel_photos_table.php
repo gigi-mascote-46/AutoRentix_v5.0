@@ -6,28 +6,16 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateBemLocavelPhotosTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('bem_locavel_photos', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('bem_locavel_id');
+            $table->foreignId('bem_locavel_id')->constrained('bens_locaveis')->onDelete('cascade');
             $table->string('photo_path');
             $table->timestamps();
-
-            $table->foreign('bem_locavel_id')->references('id')->on('bens_locaveis')->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('bem_locavel_photos');

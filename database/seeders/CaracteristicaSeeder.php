@@ -9,16 +9,23 @@ class CaracteristicaSeeder extends Seeder
 {
     public function run()
     {
-        DB::table('caracteristicas')->insert([
-            ['nome' => 'Ar-condicionado'],
-            ['nome' => 'Direção assistida'],
-            ['nome' => 'GPS'],
-            ['nome' => 'Bluetooth'],
-            ['nome' => 'Câmara de marcha-atrás'],
-            ['nome' => 'Sensores de estacionamento'],
-            ['nome' => 'Caixa automática'],
-            ['nome' => 'Isofix'],
-            ['nome' => 'Bagageira grande'],
-        ]);
+        $caracteristicas = [
+            ['id' => 1, 'nome' => 'Ar-condicionado'],
+            ['id' => 2, 'nome' => 'Direção assistida'],
+            ['id' => 3, 'nome' => 'GPS'],
+            ['id' => 4, 'nome' => 'Bluetooth'],
+            ['id' => 5, 'nome' => 'Câmara de marcha-atrás'],
+            ['id' => 6, 'nome' => 'Sensores de estacionamento'],
+            ['id' => 7, 'nome' => 'Caixa automática'],
+            ['id' => 8, 'nome' => 'Isofix'],
+            ['id' => 9, 'nome' => 'Bagageira grande'],
+        ];
+
+        foreach ($caracteristicas as $caracteristica) {
+            DB::table('caracteristicas')->updateOrInsert(
+                ['id' => $caracteristica['id']],
+                $caracteristica
+            );
+        }
     }
 }

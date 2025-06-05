@@ -13,6 +13,7 @@ class CreateMarcaTable extends Migration
             $table->foreignId('tipo_bem_id')->constrained('tipo_bens')->onDelete('cascade');
             $table->string('nome', 100);
             $table->text('observacao')->nullable();
+            $table->unique(['tipo_bem_id', 'nome']);
         });
     }
 

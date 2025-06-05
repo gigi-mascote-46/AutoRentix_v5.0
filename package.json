@@ -21,9 +21,12 @@
     },
     "dependencies": {
         "@inertiajs/inertia": "^0.11.1",
+        "dotenv": "^16.5.0",
+        "galileo": "^1.9.0",
         "jspdf": "^3.0.1",
         "jspdf-autotable": "^5.0.2",
         "leaflet": "^1.9.4",
+        "openai": "^5.0.2",
         "xlsx": "^0.18.5"
     }
 }

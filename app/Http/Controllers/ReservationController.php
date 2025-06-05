@@ -2,80 +2,57 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BemLocavel;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
-use App\Http\Controllers\PayPalController;
-use Illuminate\Http\RedirectResponse;
 
 class ReservationController extends Controller
 {
-    public function confirm($id)
+    public function index()
     {
-        $bem = BemLocavel::with('marca', 'caracteristicas', 'localizacao')->findOrFail($id);
-        return Inertia::render('AreaCliente/Reservations/Confirm', compact('bem'));
+        $reservations = Reservation::all();
+        return response()->json($reservations);
     }
 
-    public function payment(Request $request, $id)
+    public function show($id)
     {
-        $bem = BemLocavel::with('marca', 'caracteristicas', 'localizacao')->findOrFail($id);
-
-        $dataInicio = $request->query('dataInicio');
-        $dataFim = $request->query('dataFim');
-
-        // Calculate total price (simple example)
-        $days = (strtotime($dataFim) - strtotime($dataInicio)) / 86400 + 1;
-        $total = $days * $bem->preco_diario;
-
-        return Inertia::render('AreaCliente/Reservations/Payment', compact('bem', 'dataInicio', 'dataFim', 'total'));
+        $reservation = Reservation::findOrFail($id);
+        return response()->json($reservation);
     }
 
-    public function processPayment(Request $request, $id)
+    public function store(Request $request)
     {
-        $paymentMethod = $request->input('metodo_pagamento');
-
-        if ($paymentMethod === 'paypal') {
-            $bem = BemLocavel::findOrFail($id);
-            $dataInicio = $request->input('dataInicio');
-            $dataFim = $request->input('dataFim');
-
-            $days = (strtotime($dataFim) - strtotime($dataInicio)) / 86400 + 1;
-            $total = $days * $bem->preco_diario;
-
-            // Redirect to PayPalController processTransaction with amount
-            return redirect()->action([PayPalController::class, 'processTransaction'], ['amount' => $total]);
-        }
-
-        // Validate payment and reservation data here (simplified)
-        $request->validate([
-            'nome' => 'required|string',
-            'apelido' => 'required|string',
-            'data_nascimento' => 'required|date',
-            'email' => 'required|email',
-            'telefone' => 'required|string',
-            'cartao_numero' => 'required|string',
-            'cartao_validade' => 'required|string',
-            'cartao_cvv' => 'required|string',
-            'dataInicio' => 'required|date',
-            'dataFim' => 'required|date|after_or_equal:dataInicio',
+        $validated = $request->validate([
+            'user_id' => 'required|integer|exists:users,id',
+            'registo_unico_publico' => 'required|string|max:20|exists:bens_locaveis,registo_unico_publico',
+            'data_inicio' => 'required|date',
+            'data_fim' => 'required|date|after_or_equal:data_inicio',
+            'status' => 'in:pendente,confirmada,cancelada',
         ]);
 
-        // Create reservation record
-        $reservation = new Reservation();
-        $reservation->bem_locavel_id = $id;
-        $reservation->data_inicio = $request->dataInicio;
-        $reservation->data_fim = $request->dataFim;
-        $reservation->status = 'pending';
-        $reservation->user_nome = $request->nome;
-        $reservation->user_apelido = $request->apelido;
-        $reservation->user_data_nascimento = $request->data_nascimento;
-        $reservation->user_email = $request->email;
-        $reservation->user_telefone = $request->telefone;
-        // Payment details would be processed here securely
-        $reservation->save();
+        $reservation = Reservation::create($validated);
+        return response()->json($reservation, 201);
+    }
 
-        // Redirect to a confirmation page or back to vehicle page
-        return redirect()->route('vehicles.index')->with('success', 'Reserva efetuada com sucesso!');
+    public function update(Request $request, $id)
+    {
+        $reservation = Reservation::findOrFail($id);
+
+        $validated = $request->validate([
+            'user_id' => 'sometimes|required|integer|exists:users,id',
+            'registo_unico_publico' => 'sometimes|required|string|max:20|exists:bens_locaveis,registo_unico_publico',
+            'data_inicio' => 'sometimes|required|date',
+            'data_fim' => 'sometimes|required|date|after_or_equal:data_inicio',
+            'status' => 'in:pendente,confirmada,cancelada',
+        ]);
+
+        $reservation->update($validated);
+        return response()->json($reservation);
+    }
+
+    public function destroy($id)
+    {
+        $reservation = Reservation::findOrFail($id);
+        $reservation->delete();
+        return response()->json(null, 204);
     }
 }

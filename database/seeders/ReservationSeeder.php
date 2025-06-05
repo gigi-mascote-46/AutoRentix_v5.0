@@ -3,13 +3,12 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Reservation;
+use Illuminate\Support\Facades\DB;
 
 class ReservationSeeder extends Seeder
 {
     public function run()
     {
-        // Create 10 example reservations linking existing bens locaveis and users
-        Reservation::factory()->count(10)->create();
+        // Seed data for reservations can be added here if available
     }
 }

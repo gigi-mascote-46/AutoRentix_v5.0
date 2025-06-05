@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder
             BemCaracteristicaSeeder::class,
             AdminUserSeeder::class,
             ReservationSeeder::class,
+            PaymentsSeeder::class,
+            SessionsSeeder::class,
         ]);
     }
 }

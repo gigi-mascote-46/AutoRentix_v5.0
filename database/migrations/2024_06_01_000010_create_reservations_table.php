@@ -10,13 +10,14 @@ class CreateReservationsTable extends Migration
     {
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('registo_unico_publico', 20);
-            $table->foreign('registo_unico_publico')->references('registo_unico_publico')->on('bens_locaveis')->onDelete('cascade');
             $table->date('data_inicio');
             $table->date('data_fim');
             $table->enum('status', ['pendente', 'confirmada', 'cancelada'])->default('pendente');
             $table->timestamps();
+
+            $table->foreign('registo_unico_publico')->references('registo_unico_publico')->on('bens_locaveis')->onDelete('cascade');
         });
     }
 
@@ -25,4 +26,3 @@ class CreateReservationsTable extends Migration
         Schema::dropIfExists('reservations');
     }
 }
-

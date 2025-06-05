@@ -13,5 +13,9 @@ class TipoBemSeeder extends Seeder
             ['id' => 1],
             ['nome' => 'Carro']
         );
+        DB::table('tipo_bens')->updateOrInsert(
+            ['id' => 2],
+            ['nome' => 'Bangalô']
+        );
     }
 }

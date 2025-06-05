@@ -13,18 +13,23 @@ class BemLocavelFactory extends Factory
     public function definition()
     {
         return [
+            'nome' => $this->faker->word(),
+            'descricao' => $this->faker->sentence(),
+            'registo_unico_publico' => strtoupper($this->faker->bothify('??-##-??')),
+            'preco_por_dia' => $this->faker->randomFloat(2, 20, 100),
+            'disponivel' => $this->faker->boolean(80),
+            'tipo_bem_id' => 1,
             'marca_id' => Marca::factory(),
             'modelo' => $this->faker->word(),
-            'registo_unico_publico' => strtoupper($this->faker->bothify('??-##-??')),
-            'cor' => $this->faker->safeColorName(),
-            'numero_passageiros' => $this->faker->numberBetween(2,7),
-            'combustivel' => $this->faker->randomElement(['gasolina', 'diesel', 'elétrico', 'híbrido', 'outro']),
-            'numero_portas' => $this->faker->numberBetween(2,5),
-            'transmissao' => $this->faker->randomElement(['manual', 'automática']),
             'ano' => $this->faker->year(),
-            'manutencao' => $this->faker->boolean(10), // 10% chance de estar em manutenção
-            'preco_diario' => $this->faker->randomFloat(2, 30, 150),
-            'observacao' => $this->faker->sentence(),
+            'matricula' => strtoupper($this->faker->bothify('??-##-??')),
+            'combustivel' => $this->faker->randomElement(['gasolina', 'diesel', 'híbrido', 'eléctrico']),
+            'transmissao' => $this->faker->randomElement(['manual', 'automática']),
+            'lugares' => $this->faker->numberBetween(2, 7),
+            'portas' => $this->faker->numberBetween(2, 5),
+            'ar_condicionado' => $this->faker->boolean(),
+            'gps' => $this->faker->boolean(),
+            'bluetooth' => $this->faker->boolean(),
         ];
     }
 }
