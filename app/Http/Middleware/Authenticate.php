@@ -10,19 +10,21 @@ use Illuminate\Support\Facades\Auth;
 class Authenticate
 {
     /**
-     * Handle an incoming request.
+     * Trata uma requisição recebida.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // Verifica se o utilizador está autenticado
         if (!Auth::check()) {
-            
-            // Redirect to login page or abort with 401 Unauthorized
+            // Se não estiver autenticado, redireciona para a página de login
+            // Alternativamente, poderia abortar a requisição com erro 401 Unauthorized
             return redirect('/login');
-            // Or use abort(401);
+            // Exemplo alternativo: abort(401);
         }
 
+        // Se estiver autenticado, deixa continuar o processamento da requisição
         return $next($request);
     }
 }

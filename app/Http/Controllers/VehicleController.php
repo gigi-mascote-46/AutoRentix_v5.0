@@ -14,52 +14,54 @@ use Illuminate\Support\Facades\Log;
 class VehicleController extends Controller
 {
     /**
-     * Display a listing of available vehicles/properties
+     * Exibe a lista de veículos/propriedades disponíveis
      */
     public function index(Request $request)
     {
         try {
-            // Base query with eager loading
+            // Query base com eager loading para evitar N+1
             $query = BemLocavel::query()
-                ->with(['tipoBem', 'marca', 'localizacao', 'caracteristicas'])
-            ->where('disponivel', true);
+                ->with(['tipoBem', 'marca', 'localizacao', 'caracteristicas']);
+                // Se quiseres só disponíveis, podes descomentar:
+                // ->where('disponivel', true);
 
-        // Apply filters if provided
-        if ($request->filled('tipo_bem_id')) {
-            $query->where('tipo_bem_id', $request->tipo_bem_id);
-        }
+            // Aplicar filtros se existirem no pedido
 
-        if ($request->filled('marca_id')) {
-            $query->where('marca_id', $request->marca_id);
-        }
+            if ($request->filled('tipo_bem_id')) {
+                $query->where('tipo_bem_id', $request->tipo_bem_id);
+            }
 
-        if ($request->filled('localizacao_id')) {
-            $query->where('localizacao_id', $request->localizacao_id);
-        }
+            if ($request->filled('marca_id')) {
+                $query->where('marca_id', $request->marca_id);
+            }
 
-        if ($request->filled('preco_min')) {
-            $query->where('preco_por_dia', '>=', $request->preco_min);
-        }
+            if ($request->filled('localizacao_id')) {
+                $query->where('localizacao_id', $request->localizacao_id);
+            }
 
-        if ($request->filled('preco_max')) {
-            $query->where('preco_por_dia', '<=', $request->preco_max);
-        }
+            if ($request->filled('preco_min')) {
+                $query->where('preco_por_dia', '>=', $request->preco_min);
+            }
 
-        // Search by name or description
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('nome', 'like', "%{$search}%")
-                  ->orWhere('descricao', 'like', "%{$search}%");
-            });
-        }
+            if ($request->filled('preco_max')) {
+                $query->where('preco_por_dia', '<=', $request->preco_max);
+            }
 
-            // Date availability filter
+            // Pesquisa por nome ou descrição (query LIKE)
+            if ($request->filled('search')) {
+                $search = $request->search;
+                $query->where(function ($q) use ($search) {
+                    $q->where('nome', 'like', "%{$search}%")
+                      ->orWhere('descricao', 'like', "%{$search}%");
+                });
+            }
+
+            // Filtrar por disponibilidade nas datas pedidas
             if ($request->filled('data_inicio') && $request->filled('data_fim')) {
                 $dataInicio = $request->data_inicio;
                 $dataFim = $request->data_fim;
 
-                // Exclude vehicles that have reservations in the requested period
+                // Excluir veículos que tenham reservas conflitantes
                 $query->whereDoesntHave('reservations', function ($q) use ($dataInicio, $dataFim) {
                     $q->where('status', '!=', 'cancelada')
                       ->where(function ($q) use ($dataInicio, $dataFim) {
@@ -73,29 +75,33 @@ class VehicleController extends Controller
                 });
             }
 
-            // Get paginated results
-        $vehicles = $query->paginate(12)->withQueryString();
+            // Paginar os resultados para melhor performance e UX
+            $vehicles = $query->paginate(12)->withQueryString();
 
-        // Get filter options
+            // Obter opções para filtros a mostrar na view
             $tiposBem = TipoBem::all(['id', 'nome']);
             $marcas = Marca::all(['id', 'nome']);
-            $localizacoes = Localizacao::all(['id', 'nome']);
+            // Aqui foi mudado para obter 'cidade' pois 'nome' não existe na localizacao
+            $localizacoes = Localizacao::all(['id', 'cidade']);
             $caracteristicas = Caracteristica::all(['id', 'nome']);
 
-        return Inertia::render('Publico/Vehicles/Index', [
-            'vehicles' => $vehicles,
-            'filters' => [
-                'tiposBem' => $tiposBem,
-                'marcas' => $marcas,
-                'localizacoes' => $localizacoes,
-                'caracteristicas' => $caracteristicas,
-            ],
-                'queryParams' => $request->query() ?: [],
-        ]);
+            // Retornar a view com os dados e filtros usando Inertia
+            return Inertia::render('Publico/Vehicles/Index', [
+                'vehicles' => $vehicles,
+                'filters' => [
+                    'tiposBem' => $tiposBem,
+                    'marcas' => $marcas,
+                    'localizacoes' => $localizacoes,
+                    'caracteristicas' => $caracteristicas,
+                ],
+                'queryParams' => $request->query() ?: [], // mantém os filtros atuais na query string
+            ]);
 
         } catch (\Exception $e) {
+            // Em caso de erro, regista no log para análise futura
             Log::error('Error in VehicleController@index: ' . $e->getMessage());
 
+            // Retorna view com erro e sem veículos para não quebrar a página
             return Inertia::render('Publico/Vehicles/Index', [
                 'vehicles' => collect([]),
                 'filters' => [
@@ -106,20 +112,21 @@ class VehicleController extends Controller
                 ],
                 'queryParams' => [],
                 'error' => 'Erro ao carregar veículos. Tente novamente.'
-        ]);
+            ]);
+        }
     }
-}
 
     /**
-     * Display the specified vehicle/property
+     * Exibe o detalhe de um veículo/propriedade específico
      */
     public function show($id)
     {
         try {
+            // Carrega veículo com relacionamentos necessários
             $vehicle = BemLocavel::with(['tipoBem', 'marca', 'localizacao', 'caracteristicas'])
                 ->findOrFail($id);
 
-            // Get similar vehicles (same type, different vehicle)
+            // Obtém veículos similares (mesmo tipo, diferente id, disponíveis)
             $similarVehicles = BemLocavel::with(['tipoBem', 'marca', 'localizacao'])
                 ->where('tipo_bem_id', $vehicle->tipo_bem_id)
                 ->where('id', '!=', $vehicle->id)
@@ -127,14 +134,17 @@ class VehicleController extends Controller
                 ->limit(4)
                 ->get();
 
+            // Renderiza a view de detalhe com veículo e similares
             return Inertia::render('Publico/Vehicles/Show', [
                 'vehicle' => $vehicle,
                 'similarVehicles' => $similarVehicles,
             ]);
 
         } catch (\Exception $e) {
+            // Regista erro no log
             Log::error('Error in VehicleController@show: ' . $e->getMessage());
 
+            // Redireciona para a lista com mensagem de erro amigável
             return redirect()->route('vehicles.index')
                 ->with('error', 'Veículo não encontrado.');
         }

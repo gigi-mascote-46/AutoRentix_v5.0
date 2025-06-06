@@ -5,22 +5,27 @@ namespace App\Http\Controllers;
 use App\Models\BemLocavel;
 use Illuminate\Http\Request;
 
+// Este controller gere todas as operações relacionadas com os bens locáveis (ex: viaturas disponíveis para alugar)
 class BemLocavelController extends Controller
 {
+    // Lista todos os bens locáveis existentes na base de dados
     public function index()
     {
-        $bens = BemLocavel::all();
-        return response()->json($bens);
+        $bens = BemLocavel::all(); // Busca todos os registos da tabela 'bens_locaveis'
+        return response()->json($bens); // Devolve os dados em formato JSON
     }
 
+    // Mostra os detalhes de um bem locável específico pelo seu ID
     public function show($id)
     {
-        $bem = BemLocavel::findOrFail($id);
-        return response()->json($bem);
+        $bem = BemLocavel::findOrFail($id); // Procura o bem pelo ID ou lança erro 404 se não existir
+        return response()->json($bem); // Devolve o bem em formato JSON
     }
 
+    // Regista um novo bem locável na base de dados
     public function store(Request $request)
     {
+        // Valida os dados recebidos do formulário/request
         $validated = $request->validate([
             'nome' => 'required|string|max:255',
             'descricao' => 'nullable|string',
@@ -41,14 +46,20 @@ class BemLocavelController extends Controller
             'bluetooth' => 'boolean',
         ]);
 
+        // Cria um novo registo na base de dados com os dados validados
         $bem = BemLocavel::create($validated);
+
+        // Devolve o novo bem criado com status 201 (Created)
         return response()->json($bem, 201);
     }
 
+    // Atualiza os dados de um bem locável já existente
     public function update(Request $request, $id)
     {
+        // Procura o bem pelo ID, ou lança erro 404 caso não exista
         $bem = BemLocavel::findOrFail($id);
 
+        // Valida apenas os campos enviados (validação condicional com `sometimes`)
         $validated = $request->validate([
             'nome' => 'sometimes|required|string|max:255',
             'descricao' => 'nullable|string',
@@ -69,14 +80,20 @@ class BemLocavelController extends Controller
             'bluetooth' => 'boolean',
         ]);
 
+        // Atualiza o registo com os dados validados
         $bem->update($validated);
+
+        // Devolve os dados atualizados em JSON
         return response()->json($bem);
     }
 
+    // Elimina um bem locável da base de dados
     public function destroy($id)
     {
-        $bem = BemLocavel::findOrFail($id);
-        $bem->delete();
+        $bem = BemLocavel::findOrFail($id); // Procura o bem pelo ID
+        $bem->delete(); // Elimina o registo da base de dados
+
+        // Retorna resposta vazia com status 204 (No Content)
         return response()->json(null, 204);
     }
 }

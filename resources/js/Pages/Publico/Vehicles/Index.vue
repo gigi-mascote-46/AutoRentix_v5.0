@@ -54,7 +54,7 @@
                   :key="location.id"
                   :value="location.id"
                 >
-                  {{ location.nome }}
+                  {{ location.cidade }}
                 </option>
               </select>
             </div>
@@ -253,31 +253,31 @@ const filterOptions = reactive({
 })
 
 // Methods
-const applyFilters = () => {
-  const params = {}
+  const applyFilters = () => {
+    const params = {}
 
-  Object.keys(filters).forEach(key => {
-    if (filters[key]) {
-      params[key] = filters[key]
-    }
-  })
+    Object.keys(filters).forEach(key => {
+      if (filters[key]) {
+        params[key] = filters[key]
+      }
+    })
 
-  router.get(route('vehicles.index'), params, {
-    preserveState: true,
-    preserveScroll: true
-  })
-}
+    router.get('/viaturas', params, {
+      preserveState: true,
+      preserveScroll: true
+    })
+  }
 
-const clearFilters = () => {
-  Object.keys(filters).forEach(key => {
-    filters[key] = ''
-  })
+  const clearFilters = () => {
+    Object.keys(filters).forEach(key => {
+      filters[key] = ''
+    })
 
-  router.get(route('vehicles.index'), {}, {
-    preserveState: true,
-    preserveScroll: true
-  })
-}
+    router.get('/viaturas', {}, {
+      preserveState: true,
+      preserveScroll: true
+    })
+  }
 
 const formatPrice = (price) => {
   return parseFloat(price).toFixed(2).replace('.', ',')
