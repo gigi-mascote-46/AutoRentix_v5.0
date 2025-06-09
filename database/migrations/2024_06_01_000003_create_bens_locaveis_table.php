@@ -24,10 +24,8 @@ class CreateBensLocaveisTable extends Migration
             $table->string('transmissao', 20)->nullable();
             $table->integer('lugares')->nullable();
             $table->integer('portas')->nullable();
-            $table->boolean('ar_condicionado')->default(false);
-            $table->boolean('gps')->default(false);
-            $table->boolean('bluetooth')->default(false);
-            $table->timestamps();
+            $table->index(['preco_por_dia', 'disponivel'], 'idx_preco_disponivel');
+            $table->timestamps(0);
         });
     }
 

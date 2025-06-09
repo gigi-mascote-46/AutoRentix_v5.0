@@ -26,17 +26,11 @@ class BemLocavel extends Model
         'transmissao',
         'lugares',
         'portas',
-        'ar_condicionado',
-        'gps',
-        'bluetooth',
     ];
 
     protected $casts = [
         'disponivel' => 'boolean',
         'preco_por_dia' => 'decimal:2',
-        'ar_condicionado' => 'boolean',
-        'gps' => 'boolean',
-        'bluetooth' => 'boolean',
     ];
 
     // Relationships
@@ -48,11 +42,6 @@ class BemLocavel extends Model
     public function marca()
     {
         return $this->belongsTo(Marca::class, 'marca_id');
-    }
-
-    public function localizacao()
-    {
-        return $this->belongsTo(Localizacao::class, 'localizacao_id');
     }
 
     public function caracteristicas()
@@ -67,7 +56,7 @@ class BemLocavel extends Model
 
     public function reservations()
     {
-        return $this->hasMany(Reservation::class, 'bem_locavel_id');
+        return $this->hasMany(Reservation::class, 'vehicle_id');
     }
 
     // Accessors
@@ -90,10 +79,5 @@ class BemLocavel extends Model
     public function scopeByType($query, $typeId)
     {
         return $query->where('tipo_bem_id', $typeId);
-    }
-
-    public function scopeByLocation($query, $locationId)
-    {
-        return $query->where('localizacao_id', $locationId);
     }
 }

@@ -9,7 +9,7 @@ class Reservation extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'user_id', 'registo_unico_publico', 'data_inicio', 'data_fim', 'status'
+        'user_id', 'vehicle_id', 'data_inicio', 'data_fim', 'localizacao_entrega', 'localizacao_recolha', 'status'
     ];
 
     protected $casts = [
@@ -24,6 +24,16 @@ class Reservation extends Model
 
     public function bemLocavel()
     {
-        return $this->belongsTo(BemLocavel::class, 'registo_unico_publico', 'registo_unico_publico');
+        return $this->belongsTo(BemLocavel::class, 'vehicle_id');
+    }
+
+    public function localizacaoEntrega()
+    {
+        return $this->belongsTo(Localizacao::class, 'localizacao_entrega');
+    }
+
+    public function localizacaoRecolha()
+    {
+        return $this->belongsTo(Localizacao::class, 'localizacao_recolha');
     }
 }

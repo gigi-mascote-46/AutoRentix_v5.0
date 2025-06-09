@@ -10,12 +10,11 @@ class CreateLocalizacoesTable extends Migration
     {
         Schema::create('localizacoes', function (Blueprint $table) {
             $table->id();
-            $table->string('registo_unico_publico', 20);
+            $table->foreignId('vehicle_id')->constrained('bens_locaveis')->onDelete('cascade');
             $table->string('cidade', 100);
             $table->string('filial', 100)->nullable();
             $table->string('posicao', 100);
             $table->unique(['filial', 'posicao']);
-            $table->foreign('registo_unico_publico')->references('registo_unico_publico')->on('bens_locaveis')->onDelete('cascade');
         });
     }
 

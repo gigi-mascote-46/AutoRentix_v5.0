@@ -14,6 +14,8 @@ class CreatePaymentsTable extends Migration
             $table->string('metodo');
             $table->decimal('montante', 10, 2);
             $table->string('status');
+            $table->string('referencia')->nullable();
+            $table->string('comprovativo_path')->nullable();
             $table->timestamps();
         });
     }

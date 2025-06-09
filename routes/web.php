@@ -10,9 +10,11 @@ use App\Http\Controllers\Admin\AdminVehicleController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminReservationController;
 use App\Http\Controllers\Admin\AdminPaymentController;
+use App\Http\Controllers\ChatController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\MailTestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +30,12 @@ Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 Route::get('/terms', [PageController::class, 'terms'])->name('terms');
 Route::get('/refund', [PageController::class, 'refund'])->name('refund');
 Route::get('/complaint', [PageController::class, 'complaint'])->name('complaint');
+
+//Chat routes
+Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
+Route::get('/messages/{user}', [ChatController::class, 'fetchMessages']);
+Route::post('/messages', [ChatController::class, 'sendMessage']);
+
 
 // Vehicle routes (public)
 Route::get('/vehicles', [VehicleController::class, 'index'])->name('vehicles.index');
@@ -109,6 +117,8 @@ Route::fallback(function () {
 });
 
 require __DIR__.'/auth.php';
+use App\Http\Middleware\AdminMiddleware;
+
 // ----------------------------------------------------------//
 // 🌐 Páginas de teste para middleware
 Route::get('/teste-admin', function () {

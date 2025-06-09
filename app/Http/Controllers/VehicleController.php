@@ -21,7 +21,7 @@ class VehicleController extends Controller
         try {
             // Query base com eager loading para evitar N+1
             $query = BemLocavel::query()
-                ->with(['tipoBem', 'marca', 'localizacao', 'caracteristicas']);
+                ->with(['tipoBem', 'marca', 'caracteristicas']);
                 // Se quiseres só disponíveis, podes descomentar:
                 // ->where('disponivel', true);
 
@@ -36,7 +36,9 @@ class VehicleController extends Controller
             }
 
             if ($request->filled('localizacao_id')) {
-                $query->where('localizacao_id', $request->localizacao_id);
+                $query->whereHas('localizacao', function ($q) use ($request) {
+                    $q->where('id', $request->localizacao_id);
+                });
             }
 
             if ($request->filled('preco_min')) {
@@ -123,11 +125,11 @@ class VehicleController extends Controller
     {
         try {
             // Carrega veículo com relacionamentos necessários
-            $vehicle = BemLocavel::with(['tipoBem', 'marca', 'localizacao', 'caracteristicas'])
+            $vehicle = BemLocavel::with(['tipoBem', 'marca', 'caracteristicas'])
                 ->findOrFail($id);
 
             // Obtém veículos similares (mesmo tipo, diferente id, disponíveis)
-            $similarVehicles = BemLocavel::with(['tipoBem', 'marca', 'localizacao'])
+            $similarVehicles = BemLocavel::with(['tipoBem', 'marca', 'caracteristicas'])
                 ->where('tipo_bem_id', $vehicle->tipo_bem_id)
                 ->where('id', '!=', $vehicle->id)
                 ->where('disponivel', true)

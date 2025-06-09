@@ -11,13 +11,13 @@ class CreateReservationsTable extends Migration
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('registo_unico_publico', 20);
+            $table->foreignId('vehicle_id')->constrained('bens_locaveis')->onDelete('cascade');
             $table->date('data_inicio');
             $table->date('data_fim');
+            $table->foreignId('localizacao_entrega')->constrained('localizacoes');
+            $table->foreignId('localizacao_recolha')->constrained('localizacoes');
             $table->enum('status', ['pendente', 'confirmada', 'cancelada'])->default('pendente');
             $table->timestamps();
-
-            $table->foreign('registo_unico_publico')->references('registo_unico_publico')->on('bens_locaveis')->onDelete('cascade');
         });
     }
 

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Reservation;
+use Carbon\Carbon;
 
 // Controller responsável pelas páginas públicas e pelo dashboard do cliente
 class PageController extends Controller
@@ -79,11 +80,26 @@ class PageController extends Controller
         // Calcula algumas estatísticas do utilizador:
         // - Reservas ativas (status 'pendente')
         // - Reservas concluídas (status 'confirmada')
-        // - Total gasto em reservas concluídas
+        // - Total gasto em reservas concluídas (calculado dinamicamente)
+        $ativasCount = Reservation::where('user_id', $user->id)->where('status', 'pendente')->count();
+        $concluidasCount = Reservation::where('user_id', $user->id)->where('status', 'confirmada')->count();
+
+        $reservasConfirmadas = Reservation::where('user_id', $user->id)->where('status', 'confirmada')->with('bemLocavel')->get();
+
+        $totalGasto = 0;
+        foreach ($reservasConfirmadas as $reserva) {
+            if ($reserva->bemLocavel) {
+                $dataInicio = Carbon::parse($reserva->data_inicio);
+                $dataFim = Carbon::parse($reserva->data_fim);
+                $dias = $dataFim->diffInDays($dataInicio) + 1; // inclusive of start and end date
+                $totalGasto += $reserva->bemLocavel->preco_por_dia * $dias;
+            }
+        }
+
         $stats = [
-            'ativas' => Reservation::where('user_id', $user->id)->where('status', 'pendente')->count(),
-            'concluidas' => Reservation::where('user_id', $user->id)->where('status', 'confirmada')->count(),
-            'totalGasto' => Reservation::where('user_id', $user->id)->where('status', 'confirmada')->sum('total_price'),
+            'ativas' => $ativasCount,
+            'concluidas' => $concluidasCount,
+            'totalGasto' => $totalGasto,
         ];
 
         // Obtém as 5 reservas mais recentes do utilizador, ordenadas pela data de início
