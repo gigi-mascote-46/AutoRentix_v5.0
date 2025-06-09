@@ -9,6 +9,7 @@ class MarcaSeeder extends Seeder
 {
     public function run()
     {
+        // Array com as marcas a inserir ou atualizar
         $marcas = [
             ['id' => 1, 'tipo_bem_id' => 1, 'nome' => 'Toyota', 'observacao' => 'A confiabilidade e eficiência japonesa que movem o mundo!'],
             ['id' => 2, 'tipo_bem_id' => 1, 'nome' => 'Honda', 'observacao' => 'Tecnologia japonesa e eficiência compacta para levar você mais longe!'],
@@ -17,10 +18,12 @@ class MarcaSeeder extends Seeder
             ['id' => 5, 'tipo_bem_id' => 1, 'nome' => 'Renault', 'observacao' => 'Elegância e economia francesas, sem abrir mão da qualidade!'],
         ];
 
+        // Para cada marca no array, insere ou atualiza na tabela 'marca'
+        // Usa o campo 'id' para identificar se a marca já existe
         foreach ($marcas as $marca) {
             DB::table('marca')->updateOrInsert(
-                ['id' => $marca['id']],
-                $marca
+                ['id' => $marca['id']],  // condição para identificar registo
+                $marca                   // dados a inserir ou atualizar
             );
         }
     }

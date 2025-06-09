@@ -214,6 +214,6 @@ const searchVehicles = () => {
     params.data_fim = searchForm.value.data_fim
   }
 
-  router.get(route('areacliente.vehicles.index'), params)
+  router.get(route('publico.vehicles.index'), params)
 }
 </script>

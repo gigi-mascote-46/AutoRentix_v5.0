@@ -52,13 +52,13 @@ class LocalizacaoSeeder extends Seeder
             if (isset($bens[$localizacao['registo_unico_publico']])) {
                 DB::table('localizacoes')->updateOrInsert(
                     [
-                        'vehicle_id' => $bens[$localizacao['registo_unico_publico']]->id,
+                        'registo_unico_publico' => $localizacao['registo_unico_publico'],
                         'cidade' => $localizacao['cidade'],
                         'filial' => $localizacao['filial'],
                         'posicao' => $localizacao['posicao'],
                     ],
                     [
-                        'vehicle_id' => $bens[$localizacao['registo_unico_publico']]->id,
+                        'registo_unico_publico' => $localizacao['registo_unico_publico'],
                         'cidade' => $localizacao['cidade'],
                         'filial' => $localizacao['filial'],
                         'posicao' => $localizacao['posicao'],
