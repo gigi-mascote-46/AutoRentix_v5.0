@@ -88,11 +88,11 @@
         <!-- Main Content -->
         <div class="lg:pl-64">
             <!-- Top Navigation -->
-            <div class="sticky top-0 z-40 flex items-center h-16 px-4 bg-white border-b border-gray-200 shadow-sm shrink-0 gap-x-4 sm:gap-x-6 lg:px-8">
+            <div class="sticky top-0 z-40 flex items-center h-16 px-4 bg-white border-b border-gray-200 shadow-sm shrink-0 gap-x-4 sm:gap-x-6 sm:px-6 lg:px-8">
                 <button type="button" class="-m-2.5 p-2.5 text-gray-700 lg:hidden" @click="sidebarOpen = !sidebarOpen">
                     <span class="sr-only">Abrir sidebar</span>
                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                     </svg>
                 </button>
 
@@ -108,22 +108,28 @@
                     <div class="flex items-center ml-auto gap-x-4 lg:gap-x-6">
                         <!-- Profile dropdown -->
                         <div class="relative">
-                            <button class="flex items-center space-x-2 text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-admin-primary" @click="dropdownOpen = !dropdownOpen">
-                                <div class="flex items-center justify-center w-8 h-8 rounded-full bg-admin-primary">
-                                    <span class="text-sm font-medium text-white">
-                                        {{ $page.props.auth.user.name.charAt(0).toUpperCase() }}
-                                    </span>
-                                </div>
-                                <span class="font-medium text-admin-text">{{ $page.props.auth.user.name }}</span>
-                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                                </svg>
-                            </button>
+                            <Dropdown align="right" width="48">
+                                <template #trigger>
+                                    <button class="flex items-center space-x-2 text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-admin-primary">
+                                        <div class="flex items-center justify-center w-8 h-8 rounded-full bg-admin-primary">
+                                            <span class="text-sm font-medium text-white">
+                                                {{ $page.props.auth.user.name.charAt(0).toUpperCase() }}
+                                            </span>
+                                        </div>
+                                        <span class="font-medium text-admin-text">{{ $page.props.auth.user.name }}</span>
+                                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </button>
+</template>
 
-                            <div v-if="dropdownOpen" class="absolute right-0 z-50 w-48 py-1 mt-2 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                <Link :href="route('profile.edit')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Perfil</Link>
-                                <Link :href="route('logout')" method="post" as="button" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sair</Link>
-                            </div>
+                                <template #content>
+                                    <DropdownLink :href="route('profile.edit')">Perfil</DropdownLink>
+                                    <DropdownLink :href="route('logout')" method="post" as="button">
+                                        Sair
+                                    </DropdownLink>
+                                </template>
+                            </Dropdown>
                         </div>
                     </div>
                 </div>
@@ -138,9 +144,5 @@
 </template>
 
 <script setup>
-import { Link } from '@inertiajs/vue3';
-import { ref } from 'vue';
-
-const sidebarOpen = ref(true);
-const dropdownOpen = ref(false);
+import { Link, Dropdown, DropdownLink } from '@inertiajs/vue3';
 </script>

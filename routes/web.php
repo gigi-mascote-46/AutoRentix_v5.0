@@ -32,11 +32,9 @@ Route::get('/refund', [PageController::class, 'refund'])->name('refund');
 Route::get('/complaint', [PageController::class, 'complaint'])->name('complaint');
 
 //Chat routes
-Route::middleware('auth')->group(function () {
-    Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
-    Route::get('/messages/{user}', [ChatController::class, 'fetchMessages']);
-    Route::post('/messages', [ChatController::class, 'sendMessage']);
-});
+Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
+Route::get('/messages/{user}', [ChatController::class, 'fetchMessages']);
+Route::post('/messages', [ChatController::class, 'sendMessage']);
 
 
 // Vehicle routes (public)
