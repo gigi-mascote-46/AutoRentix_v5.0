@@ -262,7 +262,7 @@ const filterOptions = reactive({
       }
     })
 
-    router.get('/viaturas', params, {
+    router.get('/vehicles', params, {
       preserveState: true,
       preserveScroll: true
     })
@@ -273,7 +273,7 @@ const filterOptions = reactive({
       filters[key] = ''
     })
 
-    router.get('/viaturas', {}, {
+    router.get('/vehicles', {}, {
       preserveState: true,
       preserveScroll: true
     })

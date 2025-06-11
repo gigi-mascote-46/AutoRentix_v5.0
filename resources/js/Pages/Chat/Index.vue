@@ -2,8 +2,6 @@
 import { ref, onMounted, watch } from 'vue';
 import { router } from '@inertiajs/vue3';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
-import Echo from 'laravel-echo';
-import Pusher from 'pusher-js';
 
 const props = defineProps({
   contacts: Array
@@ -15,11 +13,30 @@ const newMessage = ref('');
 
 const fetchMessages = async (user) => {
   selectedUser.value = user;
-  const response = await axios.get(`/chat/${user.id}/messages`);
+  const response = await axios.get(`/messages/${user.id}`);
   messages.value = response.data;
 };
+<<<<<<< SEARCH
+const sendMessage = async () => {
+  if (!selectedUser.value) return; // Guard: no contact selected
+  if (!newMessage.value.trim()) return;
+
+  await axios.post('/chat/send', {
+    receiver_id: selectedUser.value.id,
+    message: newMessage.value
+  });
+=======
+const sendMessage = async () => {
+  if (!selectedUser.value) return; // Guard: no contact selected
+  if (!newMessage.value.trim()) return;
+
+  await axios.post('/messages', {
+    receiver_id: selectedUser.value.id,
+    message: newMessage.value
+  });
 
 const sendMessage = async () => {
+  if (!selectedUser.value) return; // Guard: no contact selected
   if (!newMessage.value.trim()) return;
 
   await axios.post('/chat/send', {
@@ -42,13 +59,7 @@ onMounted(async () => {
   const response = await axios.get('/api/user');
   currentUserId.value = response.data.id;
 
-  window.Pusher = Pusher;
-
-  window.Echo = new Echo({
-    broadcaster: 'socket.io',
-    host: window.location.hostname + ':6001'
-  });
-
+  // Use global window.Echo initialized in bootstrap.js
   window.Echo.private(`chat.${currentUserId.value}`)
     .listen('MessageSent', (e) => {
       if (selectedUser.value && e.message.sender_id === selectedUser.value.id) {
@@ -90,8 +101,8 @@ onMounted(async () => {
 
         <div class="flex gap-2 p-4 border-t">
           <input v-model="newMessage" type="text" class="w-full px-4 py-2 border rounded-lg"
-                 placeholder="Escreve uma mensagem..." @keyup.enter="sendMessage" />
-          <button @click="sendMessage" class="px-4 py-2 text-white bg-blue-600 rounded-lg">
+                 placeholder="Escreve uma mensagem..." @keyup.enter="sendMessage" :disabled="!selectedUser" />
+          <button @click="sendMessage" class="px-4 py-2 text-white bg-blue-600 rounded-lg" :disabled="!selectedUser">
             Enviar
           </button>
         </div>
