@@ -168,7 +168,7 @@ const submitPayment = async () => {
 
     // For all payment methods except PayPal, send reservation and show success message, then redirect to home
     // Temporary workaround: hardcode the URL to bypass Ziggy route error
-    await router.post(`/viaturas/${props.bem.id}/reservar/pagamento`, form);
+    await router.post(`/vehicles/${props.bem.id}/reservar/pagamento`, form);
     alert('Reserva efetuada com sucesso');
     router.visit(route('home'));
   }

@@ -134,8 +134,8 @@ Route::get('/teste-admin', function () {
 
 Route::name('publico.')->group(function () {
     Route::get('/', fn () => Inertia::render('Publico/Home'))->name('home');
-    Route::get('/viaturas', [VehicleController::class, 'index'])->name('vehicles.index');
-    Route::get('/viaturas/{id}', [VehicleController::class, 'show'])->name('vehicles.show');
+    Route::get('/vehicles', [VehicleController::class, 'index'])->name('vehicles.index');
+    Route::get('/vehicles/{id}', [VehicleController::class, 'show'])->name('vehicles.show');
 
     // 🔍Páginas estáticas/informação
     Route::get('/sobre', [PageController::class, 'about'])->name('about');
@@ -144,7 +144,7 @@ Route::name('publico.')->group(function () {
     Route::get('/complaint', [PageController::class, 'complaint']);
     Route::get('/help', [PageController::class, 'help'])->name('help');
     Route::get('/refund', [PageController::class, 'refund'])->name('refund');
-});
+    });
 
 // ----------------------------------------------------------//
 // ✅ Área autenticada (clientes)
@@ -181,24 +181,19 @@ Route::prefix('paypal')->name('paypal.')->group(function () {
 // o path da rota é /resources/js/Pages/AreaAdmin
 
 Route::prefix('areaAdmin')->middleware(['web', 'auth', \App\Http\Middleware\AdminMiddleware::class])->group(function () {
-    Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/', [AdminController::class, 'dashboard'])->name('areaAdmin.dashboard');
 
     // Viaturas para o admin
-    Route::get('/viaturas', [AdminVehicleController::class, 'index'])->name('admin.vehicles.index');
-    Route::get('/viaturas/criar', [AdminVehicleController::class, 'create'])->name('admin.vehicles.create');
-    Route::post('/viaturas', [AdminVehicleController::class, 'store'])->name('admin.vehicles.store');
-    Route::get('/viaturas/{id}/editar', [AdminVehicleController::class, 'edit'])->name('admin.vehicles.edit');
-    Route::put('/viaturas/{id}', [AdminVehicleController::class, 'update'])->name('admin.vehicles.update');
-    Route::delete('/viaturas/{id}', [AdminVehicleController::class, 'destroy'])->name('admin.vehicles.destroy');
+    Route::resource('viaturas', AdminVehicleController::class, ['as' => 'areaAdmin']);
 
     // Utilizadores
-    Route::get('/utilizadores', [AdminUserController::class, 'index'])->name('admin.users.index');
+    Route::resource('utilizadores', AdminUserController::class, ['as' => 'areaAdmin']);
 
     // Reservas
-    Route::get('/reservas', [AdminReservationController::class, 'index'])->name('admin.reservations.index');
+    Route::resource('reservas', AdminReservationController::class, ['as' => 'areaAdmin']);
 
     // Pagamentos
-    Route::get('/pagamentos', [AdminPaymentController::class, 'index'])->name('admin.payments.index');
+    Route::resource('pagamentos', AdminPaymentController::class, ['as' => 'areaAdmin']);
 
     // Relatórios
     Route::get('/relatorios', function () {
