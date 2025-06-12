@@ -4,7 +4,6 @@ namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;
-use Tighten\Ziggy\Ziggy;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -34,9 +33,7 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user() ?? null,
             ],
-            'ziggy' => function () use ($request) {
-                return (new Ziggy)->toArray();
-            },
+            // Remove o 'ziggy' daqui porque Ziggy foi removido do projeto
         ]);
     }
 }

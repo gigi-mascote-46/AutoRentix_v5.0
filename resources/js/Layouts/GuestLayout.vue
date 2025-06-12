@@ -6,7 +6,7 @@
 
       <nav class="space-x-4">
         <Link href="/" class="hover:text-blue-600">Home</Link>
-        <Link href="/vehicles" class="hover:text-blue-600">Viaturas</Link>
+        <Link href="/public/vehicles" class="hover:text-blue-600">Viaturas</Link>
         <Link href="/sobre" class="hover:text-blue-600">Sobre</Link>
         <Link href="/contacto" class="hover:text-blue-600">Contacto</Link>
 
@@ -24,7 +24,7 @@
 
     <!-- Main content -->
     <main class="flex-grow w-full p-6">
-      <slot />
+        <slot></slot>
     </main>
 
     <!-- Footer -->

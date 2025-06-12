@@ -73,11 +73,4 @@
       0 => 'Srmklive\\PayPal\\Providers\\PayPalServiceProvider',
     ),
   ),
-  'tightenco/ziggy' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Tighten\\Ziggy\\ZiggyServiceProvider',
-    ),
-  ),
 );

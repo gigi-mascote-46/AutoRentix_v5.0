@@ -26,6 +26,7 @@ class BemLocavel extends Model
         'transmissao',
         'lugares',
         'portas',
+        'localizacao_id', // Adicionei este campo necessário
     ];
 
     protected $casts = [
@@ -44,6 +45,12 @@ class BemLocavel extends Model
         return $this->belongsTo(Marca::class, 'marca_id');
     }
 
+    // Adicionei este relacionamento com Localizacao
+    public function localizacao()
+    {
+        return $this->belongsTo(Localizacao::class, 'localizacao_id');
+    }
+
     public function caracteristicas()
     {
         return $this->belongsToMany(Caracteristica::class, 'bem_caracteristicas', 'bem_locavel_id', 'caracteristica_id');
@@ -54,9 +61,10 @@ class BemLocavel extends Model
         return $this->hasMany(BemLocavelPhoto::class, 'bem_locavel_id');
     }
 
+    // Corrigi o nome da classe de Reservation para Reserva
     public function reservations()
     {
-        return $this->hasMany(Reservation::class, 'vehicle_id');
+        return $this->hasMany(Reserva::class, 'vehicle_id');
     }
 
     // Accessors
@@ -79,5 +87,11 @@ class BemLocavel extends Model
     public function scopeByType($query, $typeId)
     {
         return $query->where('tipo_bem_id', $typeId);
+    }
+
+    // Adicionei este scope para filtro por localização
+    public function scopeByLocation($query, $locationId)
+    {
+        return $query->where('localizacao_id', $locationId);
     }
 }
