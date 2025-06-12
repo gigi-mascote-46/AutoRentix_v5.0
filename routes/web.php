@@ -53,11 +53,11 @@ Route::middleware('auth')->group(function () {
         return Inertia::render('AreaCliente/Dashboard');
     })->name('dashboard');
 
-    Route::get('/my-profile', function () {
+    Route::get('/profile', function () {
         return Inertia::render('AreaCliente/Profile');
     })->name('client.profile');
 
-    Route::get('/my-payments', function () {
+    Route::get('/payments', function () {
         return Inertia::render('AreaCliente/Payments');
     })->name('client.payments');
 
