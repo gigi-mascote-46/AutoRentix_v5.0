@@ -12,6 +12,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\PayPalController;
+use App\Http\Controllers\Auth\PasswordResetLinkController;
+
 
 // Admin
 use App\Http\Controllers\Admin\AdminController;
@@ -22,12 +24,15 @@ use App\Http\Controllers\Admin\AdminPaymentController;
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes
+| Rotas Web
 |--------------------------------------------------------------------------
+|
+| Aqui é onde você pode registrar rotas web para sua aplicação.
+|
 */
 
 // Public Routes
-Route::name('public.')->group(function () {
+Route::name('publico.')->group(function () {
     Route::get('/', [PageController::class, 'home'])->name('home');
     Route::get('/about', [PageController::class, 'about'])->name('about');
     Route::get('/contact', [PageController::class, 'contact'])->name('contact');
@@ -36,41 +41,50 @@ Route::name('public.')->group(function () {
     Route::get('/refund', [PageController::class, 'refund'])->name('refund');
     Route::get('/complaint', [PageController::class, 'complaint'])->name('complaint');
 
-    // **Rotas para listagem e detalhe de veículos**
+    // Rotas para listagem e detalhe de veículos
     Route::get('/vehicles', [VehicleController::class, 'index'])->name('vehicles.index');
     Route::get('/vehicles/{id}', [VehicleController::class, 'show'])->name('vehicles.show');
 });
+
+
+// Auth Routes/User routes like reset password, email verification, etc.
+Route::get('/password/reset', function () {
+    return Inertia::render('Auth/ForgotPassword');
+})->name('password.request');
+Route::post('/password/email', [PasswordResetLinkController::class, 'store']);
+
 
 // Authenticated Routes (Chat)
 Route::middleware('auth')->group(function () {
     Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
     Route::get('/messages/{user}', [ChatController::class, 'fetchMessages']);
-    Route::post('/messages', [ChatController::class, 'sendMessage']);
 });
 
-// Authenticated Routes (Profile)
-// Route::middleware('auth')->group(function () {
-//     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-//     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-//     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-// });
+// Allow unauthenticated access to sendMessage for guest chat
+Route::post('/messages', [ChatController::class, 'sendMessage']);
 
 // Client Area (dashboard, reservations, profile, payments)
-Route::middleware(['auth', 'verified'])->prefix('client')->name('client.')->group(function () {
-    Route::get('/dashboard', fn () => Inertia::render('Client/Dashboard'))->name('dashboard');
-    Route::get('/profile', fn () => Inertia::render('Client/Profile'))->name('profile');
-    Route::get('/payments', fn () => Inertia::render('Client/Payments'))->name('payments');
+Route::middleware(['auth', 'verified'])->prefix('areacliente')->name('areacliente.')->group(function () {
+    Route::get('/dashboard', fn() => Inertia::render('AreaCliente/Dashboard'))->name('dashboard');
+    Route::get('/profile', fn() => Inertia::render('AreaCliente/Profile'))->name('profile');
+    Route::get('/payments', fn() => Inertia::render('AreaCliente/Payments'))->name('payments');
 
-    // User reservations
+    // Página de pagamento (exibe o formulário de pagamento)
+    Route::get('/vehicles/{id}/reserve/payment', [ReservationController::class, 'payment'])->name('vehicles.reserve.payment');
+
+    // Criação de reserva (POST)
+    Route::post('/reservas', [ReservationController::class, 'store'])->name('reservas.store');
+
+    // Listagem e detalhes de reservas do usuário
     Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations.index');
     Route::get('/reservations/{id}', [ReservationController::class, 'show'])->name('reservations.show');
     Route::get('/reservations/{id}/cancel', [ReservationController::class, 'cancel'])->name('reservations.cancel');
 
-    // Reservation Flow
+    // Fluxo de reserva
     Route::get('/vehicles/{id}/reserve', [ReservationController::class, 'create'])->name('vehicles.reserve');
     Route::post('/vehicles/{id}/reserve', [ReservationController::class, 'store'])->name('vehicles.reserve.store');
     Route::get('/vehicles/{id}/reserve/confirm', [ReservationController::class, 'confirm'])->name('vehicles.reserve.confirm');
-    Route::get('/vehicles/{id}/reserve/payment', [ReservationController::class, 'payment'])->name('vehicles.reserve.payment');
+    // Se precisar de processamento de pagamento separado:
     Route::post('/vehicles/{id}/reserve/payment', [ReservationController::class, 'processPayment'])->name('vehicles.reserve.payment.process');
 });
 
@@ -84,7 +98,9 @@ Route::prefix('paypal')->name('paypal.')->group(function () {
 });
 
 // Admin Area
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'admin'])->prefix('areaadmin')->name('admin.')->group(function () {
+
+    // Dashboard e relatórios
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/reports', [AdminController::class, 'reports'])->name('reports');
 
@@ -108,7 +124,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 });
 
 // Error Pages
-Route::get('/unauthorized', fn () => Inertia::render('Unauthorized'))->name('unauthorized');
-Route::fallback(fn () => Inertia::render('NotFound'));
+Route::get('/unauthorized', fn() => Inertia::render('Unauthorized'))->name('unauthorized');
+Route::fallback(fn() => Inertia::render('NotFound'));
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
