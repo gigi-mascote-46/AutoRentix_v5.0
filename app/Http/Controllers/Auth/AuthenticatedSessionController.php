@@ -22,6 +22,7 @@ class AuthenticatedSessionController extends Controller
         return Inertia::render('Auth/Login', [
             'canResetPassword' => Route::has('password.request'),
             'status' => session('status'),
+            'auth' => ['user' => Auth::user()],
         ]);
     }
 
@@ -47,10 +48,10 @@ class AuthenticatedSessionController extends Controller
             // }
 
             if ($user && $user->role === 'admin') {
-    \Log::info('Redirecting admin to admin.dashboard');
+    Log::info('Redirecting admin to admin.dashboard');
     return redirect('/areaAdmin'); // rota direta
 }
-            return redirect(route('areacliente.dashboard', absolute: false));
+           return redirect()->route('areacliente.dashboard');
         }
 
         return back()->withErrors([

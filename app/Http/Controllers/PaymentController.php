@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Payment;
+use App\Models\Reservation;
 use Illuminate\Http\Request;
 
 // Controller responsável pelas operações CRUD para pagamentos
@@ -26,14 +27,46 @@ class PaymentController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'reservation_id' => 'required|integer|exists:reservations,id', // Confirma que a reserva existe
-            'metodo' => 'required|string|max:255',                        // Método de pagamento
-            'montante' => 'required|numeric',                             // Valor pago
-            'status' => 'required|string|max:255',                        // Estado do pagamento (ex: pendente, confirmado)
+            'bem_id' => 'required|exists:bens_locaveis,id',
+            'nome' => 'required|string',
+            'apelido' => 'required|string',
+            'data_nascimento' => 'required|date',
+            'email' => 'required|email',
+            'telefone' => 'required|string',
+            'metodo_pagamento' => 'required|string',
+            'dataInicio' => 'required|date',
+            'dataFim' => 'required|date',
+            'total' => 'required|numeric',
         ]);
 
-        $payment = Payment::create($validated);
-        return response()->json($payment, 201); // Retorna 201 Created
+        // Cria a reserva
+        $reserva = Reservation::create([
+            'bem_locavel_id' => $validated['bem_id'],
+            'nome' => $validated['nome'],
+            'apelido' => $validated['apelido'],
+            'data_nascimento' => $validated['data_nascimento'],
+            'email' => $validated['email'],
+            'telefone' => $validated['telefone'],
+            'metodo_pagamento' => $validated['metodo_pagamento'],
+            'data_inicio' => $validated['dataInicio'],
+            'data_fim' => $validated['dataFim'],
+            'total' => $validated['total'],
+        ]);
+
+        // Cria o pagamento associado (opcional, ajuste conforme sua lógica)
+        $payment = Payment::create([
+            'reservation_id' => $reserva->id,
+            'metodo' => $validated['metodo_pagamento'],
+            'montante' => $validated['total'],
+            'status' => 'pendente', // ou 'confirmado', conforme sua lógica
+        ]);
+
+        // Retorna resposta para Inertia ou API
+        return response()->json([
+            'success' => true,
+            'reserva' => $reserva,
+            'payment' => $payment,
+        ]);
     }
 
     // Atualiza um pagamento existente

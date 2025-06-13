@@ -40,26 +40,50 @@ public function index()
     }
 
     public function sendMessage(Request $request)
-    {
-        $admin = User::where('role', 'admin')->first();
+{
+    $admin = User::where('role', 'admin')->first();
 
-        $request->validate([
-            'receiver_id' => 'required|exists:users,id',
-            'message'     => 'required|string',
-        ]);
+    $request->validate([
+        'receiver_id' => 'required|exists:users,id',
+        'message'     => 'required|string|max:1000',
+    ]);
 
-        if (!$admin || $request->receiver_id != $admin->id) {
-            return response()->json(['error' => 'You can only send messages to the admin.'], 403);
-        }
-
-        $message = Message::create([
-            'sender_id'   => Auth::id(),
-            'receiver_id' => $request->receiver_id,
-            'message'     => $request->message,
-        ]);
-
-        broadcast(new MessageSent($message))->toOthers();
-
-        return ['status' => 'Message Sent!'];
+    if (!$admin || $request->receiver_id != $admin->id) {
+        return response()->json(['error' => 'You can only send messages to the admin.'], 403);
     }
+
+    // Allow guests (sender_id null)
+    $senderId = Auth::id(); // null if guest
+
+    // Save user's message
+    $userMessage = Message::create([
+        'sender_id'   => $senderId,
+        'receiver_id' => $request->receiver_id,
+        'message'     => $request->message,
+    ]);
+
+    // Broadcast user message for real-time updates
+    broadcast(new MessageSent($userMessage))->toOthers();
+
+    // Call OpenAI to get AI response
+    $openAiService = app(\App\Services\OpenAiService::class);
+    $aiResponseText = $openAiService->sendMessage($request->message);
+
+    if ($aiResponseText) {
+        // Save AI reply as message from admin to sender (or fallback to admin)
+        $aiMessage = Message::create([
+            'sender_id'   => $admin->id,
+            'receiver_id' => $senderId ?? $admin->id,
+            'message'     => $aiResponseText,
+        ]);
+
+        broadcast(new MessageSent($aiMessage))->toOthers();
+    }
+
+    return response()->json([
+        'status' => 'Message Sent!',
+        'user_message' => $userMessage,
+        'ai_response_message' => $aiMessage ?? null,
+    ]);
+}
 }

@@ -45,31 +45,35 @@ class VehicleController extends Controller
 
             if ($request->filled('search')) {
                 $search = $request->search;
-                $query->where(fn($q) =>
+                $query->where(function ($q) use ($search) {
                     $q->where('nome', 'like', "%{$search}%")
-                      ->orWhere('descricao', 'like', "%{$search}%")
-                );
+                        ->orWhere('descricao', 'like', "%{$search}%");
+                });
             }
 
             if ($request->filled('data_inicio') && $request->filled('data_fim')) {
                 $query->whereDoesntHave('reservations', function ($q) use ($request) {
                     $q->where('status', '!=', 'cancelada')
-                      ->where(function ($q) use ($request) {
-                          $q->where('data_inicio', '<=', $request->data_fim)
-                            ->where('data_fim', '>=', $request->data_inicio);
-                      });
+                        ->where(function ($q) use ($request) {
+                            $q->where('data_inicio', '<=', $request->data_fim)
+                                ->where('data_fim', '>=', $request->data_inicio);
+                        });
                 });
             }
 
             $vehicles = $query->paginate(12)->withQueryString();
 
-            // Fetch data for filters
-            return Inertia::render('Public/Vehicles/Index', [
+            // Fetch data for filters (localizações únicas por cidade)
+            $locations = Localizacao::select('cidade')
+                ->groupBy('cidade')
+                ->get();
+
+            return Inertia::render('Publico/Vehicles/Index', [
                 'vehicles' => $vehicles,
                 'filters' => [
                     'types' => TipoBem::select('id', 'nome')->get(),
                     'brands' => Marca::select('id', 'nome')->get(),
-                    'locations' => Localizacao::select('id', 'cidade')->get(),
+                    'locations' => $locations,
                     'features' => Caracteristica::select('id', 'nome')->get(),
                 ],
                 'queryParams' => $request->query(),
@@ -81,7 +85,7 @@ class VehicleController extends Controller
             ]);
 
             // In case of error, return view with empty data and error message
-            return Inertia::render('Public/Vehicles/Index', [
+            return Inertia::render('Publico/Vehicles/Index', [
                 'vehicles' => [],
                 'filters' => [
                     'types' => [],
@@ -101,7 +105,10 @@ class VehicleController extends Controller
     public function show($id)
     {
         try {
-            $vehicle = BemLocavel::with(['tipoBem', 'marca', 'caracteristicas', 'localizacao'])->findOrFail($id);
+            $vehicle = BemLocavel::with(['marca', 'localizacao'])->findOrFail($id);
+            return Inertia::render('Publico/Vehicles/Show', [
+                'bem' => $vehicle,
+            ]);
 
             $similarVehicles = BemLocavel::with(['tipoBem', 'marca', 'caracteristicas'])
                 ->where('tipo_bem_id', $vehicle->tipo_bem_id)
@@ -110,8 +117,9 @@ class VehicleController extends Controller
                 ->limit(4)
                 ->get();
 
-            return Inertia::render('Public/Vehicles/Show', [
-                'vehicle' => $vehicle,
+            return Inertia::render('Publico/Vehicles/Show', [
+                'bem' => $vehicle, // Use "bem" para corresponder ao Vue
+                'reservations' => $vehicle->reservations ?? [],
                 'similarVehicles' => $similarVehicles,
             ]);
         } catch (\Exception $e) {
@@ -120,7 +128,7 @@ class VehicleController extends Controller
                 'vehicle_id' => $id,
             ]);
 
-            return redirect()->route('public.vehicles.index')
+            return redirect()->route('publico.vehicles.index')
                 ->with('error', 'Vehicle not found: ' . $e->getMessage());
         }
     }

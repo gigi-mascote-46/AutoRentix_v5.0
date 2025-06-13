@@ -1,0 +1,105 @@
+#Integração com API da OPEN IA
+É possível integrar o chat gpt na sua aplicação Laravel. 
+Mesmo na versão gratuita, existe um custo associado de, no mínimo, 6.20 dólares.
+
+Vamos aos passos:
+
+1. Obter a sua chave de API da OpenAI
+Acesse: https://platform.openai.com/account/api-keys
+
+Após o login, abrirá a tab `API keys`, na qual é preciso optar por `Create new secrete key`.
+No modal, crie a sua chave e a copie. Esta será a única vez em que a chave estará visível!
+Copie a sua chave.
+
+Para que esta chave seja ativada, é preciso configurar um pagamento. Para ativar o ´´billing´, acesse: https://platform.openai.com/account/billing/overview
+e adicione um cartão, sendo o pagamento mínimo de 5 doláres mais taxas (6.20 dólares). Dica: crie um cartao digital (no mbway, por exemplo) para compra única e com um limite baixo 7-10 euros.
+Após adicionar o crédito, a chave é validada e poderá fazer os requests e obter as respostas, tendo em vista o controlo do consumo apresentado em https://platform.openai.com/usage. 
+Também poderá editar os limites e adicionar alertas de uso em: https://platform.openai.com/settings/organization/limits.
+
+
+2. Adicionar a sua chave no `.env` do Laravel e no `config.services`
+No `.env`, teremos a adição de: 
+
+```php
+AI_API_KEY=VALOR_SUA_CHAVE
+```
+
+E, no `config.services`
+```php
+  'openai'=>  [
+        'api_key' => env('IA_API_KEY'),
+    ],
+```
+**Atenção ao nome da variável de ambiente! O seu nome deve corretamente referenciado!
+Seguindo o exemplo, teremos o valor da chave acessível por: `config('services.openai.api_key')`.
+
+
+3. Criar uma função para chamar a API
+Você pode usar um Controller ou um Service. Aqui vai um exemplo em um serviço:
+
+(link do exemplo)
+No exemplo acima, na função sendMessage() temos o bloco:
+" $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $this->apiKey,
+            'Content-Type'  => 'application/json',
+        ])->post($this->endpoint, [
+            'model' => 'gpt-3.5-turbo',
+            'messages' => [
+                ['role' => 'system', 'content' => 'Você é um assistente útil.'],
+                ['role' => 'user', 'content' => $userMessage],
+            ],
+            'temperature' => 0.7,
+        ]);"
+
+Nesta função, usamos o método Http::withHeader para definimos os headers da requisição: Authorization (ou seja, a autenticação via chave da API guardada no config.services.openai.api_key)
+e o Content-Type (que indica que os dados serão enviados como JSON). 
+
+A requisição é feita com o método post(), que envia os dados para a API da OpenAI por meio do url de endpoint (no caso, https://api.openai.com/v1/chat/completions). 
+Dentro do método post(), enviamos o corpo da requisição:
+1. model: define o modelo utilizado (gpt-3.5-turbo na versão "gratuita", com custo mais baixo que o 4.o, por exemplo).
+2. 'messages': array que define o contexto da conversa. O primeiro item do array (role: system) estabelece instruções para o modelo, dizendo que ele é um "assistente útil". O segundo item (role: user) contém a mensagem enviada pelo utilizador ($userMessage).
+3. temperature': define o nível de criatividade da resposta. Valores menores geram respostas mais previsíveis, enquanto valores maiores tornam as respostas mais criativas e variadas.
+
+
+Outro ponto a ter atenção é a resposta
+Como disposto na documentacao, a estrutura da resposta da OpenAI é: 
+json
+{
+    "choices": [
+        {
+            "message": {
+                "role": "assistant",
+                "content": "Aqui está a resposta gerada pelo modelo."
+            }
+        }
+    ]
+}
+
+
+Ou seja, a resposta da API após a requisicao é um array de chave choices. Por isso, o método json() em: $response->json('choices.0.message.content'); está sendo usado para extrair um valor específico do JSON retornado pela API.
+
+Como está a ser usado um serviço, criamos também um controlador, que vai chamar o serviço para executar a chamada a API, exemplo:
+
+(link)
+No exemplo acima, a chamada é realizada nas linhas:
+   $iaService = new IaServiceService();
+   $resposta = $iaService->sendMessage($mensagem);
+E, portanto, a resposta obtida da AI é gravada na variável $resposta, sendo que a mensagem enviada pelo utilizador gravada na variavel $mensagem.
+
+Como visto no servico, usamos o método post para enviar a request e obter a response.
+Ou seja, em termos de rotas, precisamos de uma post, mas também de uma get. Pois, a post lida com as request e a get carrega a pagina, a view. Por isso, precisamos de um método no controlador que retorne a view (como o método index do exemplo) e outro que chame o service e envie a mensagem (como o sendMessage)
+
+
+4. Criar rotas e view
+Nas rotas, adicionamos um get (para abrir a pagina) e post (para fazer as requisicoes)
+Route::post('/ia', [OpenIaController::class, 'sendMessage'])->name('ia.enviar');
+Route::get('/ia', [OpenIaController::class, 'index'])->name('ia.enviar');
+
+e na view, precisamos de um form com um campo de input para o utilizador escrever a sua mensagem e submete-la a rota post que chama a funcao do controlador, que por sua vez chama o servico. 
+Veja o exemplo
+(link) 
+
+
+
+##Level up: guardar na base de dados: veja no projeto do gitHub
+

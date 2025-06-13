@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BemLocavel;
+use Inertia\Inertia;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
+use App\Models\Vehicle;
+use Illuminate\Support\Facades\Auth;
 
 class ReservationController extends Controller
 {
@@ -23,22 +27,42 @@ class ReservationController extends Controller
 
     // Cria uma nova reserva após validar os dados recebidos via request
     public function store(Request $request)
-    {
-        // Validação dos campos obrigatórios para criação da reserva
+{
+    try {
         $validated = $request->validate([
-            'user_id' => 'required|integer|exists:users,id', // O ID do utilizador tem de existir na tabela users
-            'registo_unico_publico' => 'required|string|max:20|exists:bens_locaveis,registo_unico_publico', // O registo único tem de existir na tabela bens_locaveis
-            'data_inicio' => 'required|date', // Data de início da reserva, formato válido de data
-            'data_fim' => 'required|date|after_or_equal:data_inicio', // Data de fim, tem de ser igual ou posterior à data de início
-            'status' => 'in:pendente,confirmada,cancelada', // Status da reserva, caso enviado, deve estar entre estes valores
+            'vehicle_id' => 'required|exists:bens_locaveis,id',
+            'nome' => 'required|string',
+            'apelido' => 'required|string',
+            'data_nascimento' => 'required|date',
+            'email' => 'required|email',
+            'telefone' => 'required|string',
+            'metodo_pagamento' => 'required|string',
+            'dataInicio' => 'required|date',
+            'dataFim' => 'required|date',
+            'total' => 'required|numeric',
+            'localizacao_entrega' => 'required|exists:localizacoes,id',
+            'localizacao_recolha' => 'required|exists:localizacoes,id',
         ]);
-
-        // Cria efetivamente a reserva com os dados validados
-        $reservation = Reservation::create($validated);
-
-        // Retorna a nova reserva criada em formato JSON com código 201 (created)
-        return response()->json($reservation, 201);
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        return response()->json([
+            'success' => false,
+            'errors' => $e->errors(),
+        ], 422);
     }
+
+    $userId = Auth::check() ? Auth::user()->id : null;
+
+    $reserva = Reservation::create([
+        'user_id' => $userId,
+        'vehicle_id' => $validated['vehicle_id'],
+        'data_inicio' => $validated['dataInicio'],
+        'data_fim' => $validated['dataFim'],
+        'localizacao_entrega' => $validated['localizacao_entrega'],
+        'localizacao_recolha' => $validated['localizacao_recolha'],
+    ]);
+
+    return response()->json(['success' => true, 'reserva' => $reserva]);
+}
 
     // Atualiza uma reserva existente, identificada pelo seu ID
     public function update(Request $request, $id)
@@ -62,6 +86,23 @@ class ReservationController extends Controller
         // Retorna a reserva atualizada em JSON
         return response()->json($reservation);
     }
+
+   public function payment(Request $request, $id)
+{
+    $vehicle = BemLocavel::with('marca')->findOrFail($id);
+
+    $dataInicio = $request->input('dataInicio');
+    $dataFim = $request->input('dataFim');
+    $dias = (strtotime($dataFim) - strtotime($dataInicio)) / 86400;
+    $total = $dias * $vehicle->preco_por_dia;
+
+    return Inertia::render('AreaCliente/Reservations/Payment', [
+        'bem' => $vehicle,
+        'dataInicio' => $dataInicio,
+        'dataFim' => $dataFim,
+        'total' => $total,
+    ]);
+}
 
     // Elimina uma reserva pelo seu ID
     public function destroy($id)

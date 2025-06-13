@@ -9,7 +9,7 @@
           <p><strong>Modelo:</strong> {{ bem.modelo }}</p>
           <p><strong>Marca:</strong> {{ bem.marca.nome }}</p>
           <p><strong>Cor:</strong> {{ bem.cor }}</p>
-          <p><strong>Preço Diário:</strong> {{ Number(bem.preco_diario).toFixed(2) }} €</p>
+          <p><strong>Preço Diário:</strong> {{ Number(bem.preco_por_dia).toFixed(2) }} €</p>
         </div>
       </div>
       <div class="mt-6">

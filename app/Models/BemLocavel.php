@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Reservation;
 
 class BemLocavel extends Model
 {
@@ -47,9 +48,9 @@ class BemLocavel extends Model
 
     // Adicionei este relacionamento com Localizacao
     public function localizacao()
-    {
-        return $this->belongsTo(Localizacao::class, 'localizacao_id');
-    }
+{
+    return $this->hasOne(Localizacao::class, 'vehicle_id');
+}
 
     public function caracteristicas()
     {
@@ -64,7 +65,7 @@ class BemLocavel extends Model
     // Corrigi o nome da classe de Reservation para Reserva
     public function reservations()
     {
-        return $this->hasMany(Reserva::class, 'vehicle_id');
+        return $this->hasMany(Reservation::class, 'vehicle_id');
     }
 
     // Accessors

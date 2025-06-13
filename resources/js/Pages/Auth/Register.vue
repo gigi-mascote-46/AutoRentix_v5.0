@@ -45,6 +45,6 @@ const form = useForm({
 });
 
 function submit() {
-  form.post(route('register'));
+  form.post('/register');
 }
 </script>

@@ -16,13 +16,20 @@ class PageController extends Controller
     public function home()
     {
         // Seleciona só os campos necessários para as localizações e tipos de veículos
-        $locations = Localizacao::select('id', 'cidade as nome')->get();
+        $locations = Localizacao::select('cidade as nome')->distinct()->get();
         $vehicleTypes = TipoBem::select('id', 'nome')->get();
+
+        // Adicione um id fictício para o v-for funcionar (opcional)
+    $locations = $locations->map(function($loc, $index) {
+        $loc->id = $index + 1;
+        return $loc;
+    });
 
         return Inertia::render('Publico/Home', [
             'locations' => $locations,
             'vehicleTypes' => $vehicleTypes,
-            'vehiclesIndexUrl' => route('vehicles.index'), // URL para a listagem de veículos
+            'vehiclesIndexUrl' => route('publico.vehicles.index'), // URL para a listagem de veículos
+            'auth' => ['user' => Auth::user()],
         ]);
     }
 
@@ -82,6 +89,7 @@ class PageController extends Controller
             ->get();
 
         $totalGasto = 0;
+
         foreach ($reservasConfirmadas as $reserva) {
             if ($reserva->bemLocavel) {
                 $dataInicio = Carbon::parse($reserva->data_inicio);

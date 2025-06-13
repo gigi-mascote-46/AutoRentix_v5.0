@@ -20,7 +20,7 @@
           <input type="checkbox" v-model="form.remember" />
           <span>Lembrar-me</span>
         </label>
-        <Link :href="route('password.request')" class="text-sm text-blue-600 hover:underline">Esqueceste a senha?</Link>
+        <Link href="/password/reset" class="text-sm text-blue-600 hover:underline">Esqueceste a senha?</Link>
       </div>
 
       <button class="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700">Entrar</button>
@@ -41,7 +41,6 @@ const form = useForm({
 });
 
 function submit() {
-  form.post(route('login'));
+  form.post('/login');
 }
 </script>
-
