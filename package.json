@@ -1,0 +1,35 @@
+{
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "vite build",
+        "dev": "vite"
+    },
+    "devDependencies": {
+        "@inertiajs/vue3": "^2.0.11",
+        "@tailwindcss/forms": "^0.5.3",
+        "@tailwindcss/vite": "^4.1.8",
+        "@vitejs/plugin-vue": "^5.0.0",
+        "autoprefixer": "^10.4.12",
+        "axios": "^1.8.2",
+        "concurrently": "^9.0.1",
+        "laravel-vite-plugin": "^1.2.0",
+        "postcss": "^8.4.31",
+        "tailwindcss": "^3.4.17",
+        "vite": "^6.2.4",
+        "vue": "^3.4.0"
+    },
+    "dependencies": {
+        "@inertiajs/inertia": "^0.11.1",
+        "dotenv": "^16.5.0",
+        "galileo": "^1.9.0",
+        "jspdf": "^3.0.1",
+        "jspdf-autotable": "^5.0.2",
+        "laravel-echo": "^2.1.5",
+        "leaflet": "^1.9.4",
+        "openai": "^5.0.2",
+        "pusher-js": "^8.4.0",
+        "socket.io-client": "^4.8.1",
+        "xlsx": "^0.18.5"
+    }
+}
