@@ -54,6 +54,8 @@ Route::get('/password/reset', function () {
 Route::post('/password/email', [PasswordResetLinkController::class, 'store']);
 
 
+use App\Http\Controllers\Api\AdminContactController;
+
 // Authenticated Routes (Chat)
 Route::middleware('auth')->group(function () {
     Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
@@ -62,6 +64,9 @@ Route::middleware('auth')->group(function () {
 
 // Allow unauthenticated access to sendMessage for guest chat
 Route::post('/messages', [ChatController::class, 'sendMessage']);
+
+// New route for guest chat admin contact
+Route::get('/api/admin-contact', [AdminContactController::class, 'index']);
 
 // Client Area (dashboard, reservations, profile, payments)
 Route::middleware(['auth', 'verified'])->prefix('areacliente')->name('areacliente.')->group(function () {

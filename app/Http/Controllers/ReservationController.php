@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\Vehicle;
 use Illuminate\Support\Facades\Auth;
 
+
 class ReservationController extends Controller
 {
     // Lista todas as reservas existentes na base de dados
@@ -26,7 +27,7 @@ class ReservationController extends Controller
     }
 
     // Cria uma nova reserva após validar os dados recebidos via request
-    public function store(Request $request)
+   public function store(Request $request)
 {
     try {
         $validated = $request->validate([
@@ -44,10 +45,7 @@ class ReservationController extends Controller
             'localizacao_recolha' => 'required|exists:localizacoes,id',
         ]);
     } catch (\Illuminate\Validation\ValidationException $e) {
-        return response()->json([
-            'success' => false,
-            'errors' => $e->errors(),
-        ], 422);
+        return back()->withErrors($e->errors())->withInput();
     }
 
     $userId = Auth::check() ? Auth::user()->id : null;
@@ -61,7 +59,11 @@ class ReservationController extends Controller
         'localizacao_recolha' => $validated['localizacao_recolha'],
     ]);
 
-    return response()->json(['success' => true, 'reserva' => $reserva]);
+    // Redireciona para a página de finalização da transação
+    return Inertia::render('AreaCliente/Reservations/FinishTransaction', [
+        'amount' => $validated['total'],
+        'payerName' => $validated['nome'] . ' ' . $validated['apelido'],
+    ]);
 }
 
     // Atualiza uma reserva existente, identificada pelo seu ID
@@ -104,6 +106,14 @@ class ReservationController extends Controller
     ]);
 }
 
+
+public function finishTransaction(Request $request)
+{
+    return Inertia::render('AreaCliente/Reservations/FinishTransaction', [
+        'amount' => session('amount'),
+        'payerName' => session('payerName'),
+    ]);
+}
     // Elimina uma reserva pelo seu ID
     public function destroy($id)
     {

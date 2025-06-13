@@ -25,24 +25,18 @@
                         <label for="telefone" class="block font-medium">Número de telefone*</label>
                         <input id="telefone" v-model="form.telefone" type="tel" required class="input" />
                     </div>
-            <div>
-                <label for="localizacao_entrega" class="block font-medium">Localização de Entrega*</label>
-                <select id="localizacao_entrega" v-model="form.localizacao_entrega" required class="input">
-                    <option value="" disabled>Selecione a localização de entrega</option>
-                    <option v-for="loc in localizacoes" :key="loc.id" :value="loc.id">
-                        {{ loc.cidade }} - {{ loc.filial || 'Principal' }}
-                    </option>
-                </select>
-            </div>
-            <div>
-                <label for="localizacao_recolha" class="block font-medium">Localização de Recolha*</label>
-                <select id="localizacao_recolha" v-model="form.localizacao_recolha" required class="input">
-                    <option value="" disabled>Selecione a localização de recolha</option>
-                    <option v-for="loc in localizacoes" :key="loc.id" :value="loc.id">
-                        {{ loc.cidade }} - {{ loc.filial || 'Principal' }}
-                    </option>
-                </select>
-            </div>
+                    <div>
+                        <label for="localizacao_entrega" class="block font-medium">Localização de Entrega*</label>
+                        <input id="localizacao_entrega" class="input"
+                            :value="bem.localizacao ? (bem.localizacao.cidade + ' - ' + (bem.localizacao.filial || 'Principal')) : 'Localização não definida'"
+                            readonly disabled />
+                    </div>
+                    <div>
+                        <label for="localizacao_recolha" class="block font-medium">Localização de Recolha*</label>
+                        <input id="localizacao_recolha" class="input"
+                            :value="bem.localizacao ? (bem.localizacao.cidade + ' - ' + (bem.localizacao.filial || 'Principal')) : 'Localização não definida'"
+                            readonly disabled />
+                    </div>
                 </div>
             </section>
 
@@ -148,8 +142,8 @@ const form = reactive({
     cartao_numero: '',
     cartao_validade: '',
     cartao_cvv: '',
-    localizacao_entrega: props.bem.localizacao_id || '',
-    localizacao_recolha: props.bem.localizacao_id || '',
+    localizacao_entrega: props.bem.localizacao?.id || '',
+    localizacao_recolha: props.bem.localizacao?.id || '',
     total: props.total,
 });
 
@@ -182,7 +176,7 @@ function generateProformaPDF() {
 
 const submitPayment = () => {
     console.log('submitPayment called');
-    router.post('/areacliente/reservas', {
+    const payload = {
         vehicle_id: props.bem.id,
         nome: form.nome,
         apelido: form.apelido,
@@ -193,9 +187,12 @@ const submitPayment = () => {
         dataInicio: props.dataInicio,
         dataFim: props.dataFim,
         total: props.total,
-        localizacao_entrega: form.localizacao_entrega,
-        localizacao_recolha: form.localizacao_recolha,
-    }, {
+        localizacao_entrega: form.localizacao_entrega || 1, // 1 = ID default
+        localizacao_recolha: form.localizacao_recolha || 1,
+    };
+    console.log('Payload:', payload);
+
+    router.post('/areacliente/reservas', payload, {
         onSuccess: () => {
             console.log('Reservation created successfully');
             generateProformaPDF();

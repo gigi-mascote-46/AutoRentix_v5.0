@@ -55,6 +55,11 @@ public function index()
     // Allow guests (sender_id null)
     $senderId = Auth::id(); // null if guest
 
+    // Fix: If senderId is null, assign a default guest user id 9999
+    if (is_null($senderId)) {
+        $senderId = 9999; // guest user id created by seeder
+    }
+
     // Save user's message
     $userMessage = Message::create([
         'sender_id'   => $senderId,

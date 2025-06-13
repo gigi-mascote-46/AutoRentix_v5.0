@@ -127,8 +127,8 @@ const toggleChat = () => {
 
 const fetchAdminUserId = async () => {
     try {
-        // Fetch admin user from /chat endpoint (which returns admin contact)
-        const response = await axios.get('/chat');
+        // Fetch admin user from new API endpoint for guest chat
+        const response = await axios.get('/api/admin-contact');
         if (response.data.contacts && response.data.contacts.length > 0) {
             adminUserId.value = response.data.contacts[0].id;
             if (userId.value) {
