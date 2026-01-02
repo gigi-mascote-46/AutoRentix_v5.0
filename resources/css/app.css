@@ -1,0 +1,165 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* Estilos base globais aplicados com Tailwind */
+@layer base {
+    /* Configuro o comportamento de scroll suave em toda a página */
+    html {
+        scroll-behavior: smooth;
+    }
+
+    /* Defino a fonte base do corpo, com suavização de fontes e cores de fundo e texto personalizados */
+    body {
+        @apply font-sans antialiased;
+        @apply bg-user-background text-user-text;
+    }
+
+    /* Personalização da scrollbar para navegadores baseados em WebKit (Chrome, Safari) */
+    ::-webkit-scrollbar {
+        width: 8px; /* Largura da barra de scroll */
+    }
+
+    ::-webkit-scrollbar-track {
+        @apply bg-gray-100; /* Cor do "trilho" da scrollbar */
+    }
+
+    ::-webkit-scrollbar-thumb {
+        @apply bg-gray-300 rounded-full; /* Cor e cantos arredondados da "barra" da scrollbar */
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        @apply bg-gray-400; /* Cor da barra quando o utilizador passa o mouse por cima */
+    }
+}
+
+/* Definição de componentes reutilizáveis para facilitar o desenvolvimento */
+@layer components {
+    /* Botões base, com estilos comuns a todos os botões */
+    .btn-base {
+        @apply inline-flex items-center justify-center px-4 py-2 font-medium transition-all duration-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+    }
+
+    /* Botão principal do utilizador, com cores específicas e estados hover e focus */
+    .btn-primary {
+        @apply text-white btn-base bg-user-primary hover:bg-user-action focus:ring-user-primary;
+    }
+
+    /* Botão secundário do utilizador */
+    .btn-secondary {
+        @apply btn-base bg-user-secondary text-user-text hover:bg-yellow-500 focus:ring-user-secondary;
+    }
+
+    /* Botões para o admin, diferenciados por cores */
+    .btn-admin-primary {
+        @apply text-white btn-base bg-admin-primary hover:bg-blue-900 focus:ring-admin-primary;
+    }
+
+    .btn-admin-secondary {
+        @apply text-white btn-base bg-admin-secondary hover:bg-orange-600 focus:ring-admin-secondary;
+    }
+
+    .btn-admin-highlight {
+        @apply text-white btn-base bg-admin-highlight hover:bg-admin-highlight-hover focus:ring-admin-highlight;
+    }
+
+    /* Cartões padrão para exibição de conteúdo com bordas e sombras */
+    .card {
+        @apply overflow-hidden bg-white border border-gray-100 rounded-xl shadow-soft;
+    }
+
+    /* Cartões específicos para admin com borda ligeiramente diferente */
+    .card-admin {
+        @apply overflow-hidden bg-white border border-gray-200 rounded-xl shadow-soft;
+    }
+
+    /* Inputs base com transição suave e foco personalizado para o utilizador */
+    .input-base {
+        @apply block w-full transition-colors duration-200 border-gray-300 rounded-lg shadow-sm focus:border-user-primary focus:ring-user-primary;
+    }
+
+    /* Inputs para admin com foco e borda adaptados */
+    .input-admin {
+        @apply block w-full transition-colors duration-200 border-gray-300 rounded-lg shadow-sm focus:border-admin-primary focus:ring-admin-primary;
+    }
+
+    /* Estilos para links de navegação, com padding e transições */
+    .nav-link {
+        @apply px-3 py-2 text-sm font-medium transition-colors duration-200 rounded-md;
+    }
+
+    /* Link de navegação ativo para o utilizador */
+    .nav-link-active {
+        @apply text-white nav-link bg-user-primary;
+    }
+
+    /* Link de navegação inativo com hover para utilizador */
+    .nav-link-inactive {
+        @apply nav-link text-user-text hover:text-user-primary hover:bg-gray-50;
+    }
+
+    /* Link ativo para o admin */
+    .nav-link-admin-active {
+        @apply text-white nav-link bg-admin-primary;
+    }
+
+    /* Link inativo para o admin com efeitos hover */
+    .nav-link-admin-inactive {
+        @apply nav-link text-admin-text hover:text-admin-primary hover:bg-admin-background;
+    }
+
+    /* Gradientes personalizados para o utilizador */
+    .gradient-user {
+        background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+    }
+
+    /* Gradientes personalizados para o admin */
+    .gradient-admin {
+        background: linear-gradient(135deg, #1E3A8A 0%, #065F46 100%);
+    }
+
+    /* Animações reutilizáveis para efeitos visuais */
+    .animate-fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .animate-slide-up {
+        animation: slideUp 0.3s ease-out;
+    }
+
+    .animate-scale-in {
+        animation: scaleIn 0.2s ease-out;
+    }
+}
+
+/* Utilitários personalizados para text wrapping e padrões de fundo */
+@layer utilities {
+    /* Texto com quebra de linha equilibrada */
+    .text-balance {
+        text-wrap: balance;
+    }
+
+    /* Fundo com padrão de pontos azul claro para utilizador */
+    .bg-pattern {
+        background-image: radial-gradient(circle at 1px 1px, rgba(59, 130, 246, 0.1) 1px, transparent 0);
+        background-size: 20px 20px;
+    }
+
+    /* Fundo com padrão de pontos para admin, com cores diferentes */
+    .bg-pattern-admin {
+        background-image: radial-gradient(circle at 1px 1px, rgba(30, 58, 138, 0.1) 1px, transparent 0);
+        background-size: 20px 20px;
+    }
+}
+
+/* Ajustes para dispositivos com largura até 640px para melhor responsividade */
+@media (max-width: 640px) {
+    .container {
+        @apply px-4; /* Padding lateral para pequenos ecrãs */
+    }
+}
+
+/* Preparação para suporte a modo escuro no futuro */
+@media (prefers-color-scheme: dark) {
+    /* Aqui posso colocar estilos para dark mode quando necessário */
+}
