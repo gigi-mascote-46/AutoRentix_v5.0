@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-import { onMounted, defineProps } from 'vue';
+import { onMounted } from 'vue';
 import { router } from '@inertiajs/vue3';
 
 const props = defineProps({
@@ -24,7 +24,9 @@ const navigateToPage = (url) => {
 onMounted(() => {
   if (!window.paypal) {
     const script = document.createElement('script');
-    script.src = `https://www.paypal.com/sdk/js?client-id=Aef6LobGNR61jLQ4B5rxjZrtUYps8o0DFCUXMx2_65MxqlyulzEQMO8TM9F5izL9vGyzAfMgkK3LCC93&currency=EUR`;
+    // Use environment variable for Client ID. Fallback provided for dev, but should be in .env
+    const clientId = import.meta.env.VITE_PAYPAL_CLIENT_ID || 'Aef6LobGNR61jLQ4B5rxjZrtUYps8o0DFCUXMx2_65MxqlyulzEQMO8TM9F5izL9vGyzAfMgkK3LCC93';
+    script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=EUR`;
     script.onload = renderPayPalButtons;
     document.head.appendChild(script);
   } else {
@@ -35,16 +37,8 @@ onMounted(() => {
 function renderPayPalButtons() {
   window.paypal.Buttons({
     createOrder: function (data, actions) {
-      // Call backend to create the order
-      return fetch(route('paypal.createTransaction'), {
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-        },
-        body: JSON.stringify({ amount: props.amount }) // Use dynamic amount from props
-      })
-      .then(res => res.json())
+      return axios.post(route('paypal.createTransaction'), { amount: props.amount })
+      .then(res => res.data)
       .then(data => {
         if (data.id) {
           return data.id;
@@ -55,16 +49,8 @@ function renderPayPalButtons() {
       });
     },
     onApprove: function (data, actions) {
-      // Capture the order on backend
-      return fetch(route('paypal.processTransaction'), {
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-        },
-        body: JSON.stringify({ token: data.orderID })
-      })
-      .then(res => res.json())
+      return axios.post(route('paypal.processTransaction'), { token: data.orderID })
+      .then(res => res.data)
       .then(response => {
         if (response.status === 'COMPLETED') {
           router.visit(route('paypal.successTransaction', { token: data.orderID }));

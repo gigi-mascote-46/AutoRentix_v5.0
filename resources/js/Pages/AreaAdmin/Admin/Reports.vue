@@ -26,6 +26,10 @@
         Filtrar
       </button>
 
+      <button @click="resetFilters" class="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50">
+        Limpar
+      </button>
+
       <!-- Export and Print Buttons -->
       <button @click="printReport" title="Imprimir" class="p-2 ml-auto hover:text-gray-700" aria-label="Imprimir">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -74,6 +78,7 @@
 
 <script setup>
 import { ref, computed } from 'vue';
+import { router } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -81,7 +86,7 @@ import * as XLSX from 'xlsx';
 
 defineOptions({ layout: AdminLayout });
 
-defineProps({
+const props = defineProps({
   reports: {
     type: Object,
     required: true,
@@ -93,10 +98,10 @@ defineProps({
 });
 
 const filters = ref({
-  month: '',
-  year: '',
-  brand: '',
-  date: '',
+  month: new URLSearchParams(window.location.search).get('month') || '',
+  year: new URLSearchParams(window.location.search).get('year') || '',
+  brand: new URLSearchParams(window.location.search).get('brand') || '',
+  date: new URLSearchParams(window.location.search).get('date') || '',
 });
 
 const months = [
@@ -120,28 +125,24 @@ for (let y = currentYear; y >= currentYear - 10; y--) {
   years.push(y);
 }
 
-const filteredReports = ref({ ...reports });
+const filteredReports = computed(() => props.reports);
 
 function applyFilters() {
-  // Basic client-side filtering example (assuming reports has detailed data)
-  // This should be adapted to your actual data structure and filtering needs
-  let filtered = { ...reports };
+  router.get(route(route().current()), filters.value, {
+    preserveState: true,
+    preserveScroll: true,
+    replace: true,
+  });
+}
 
-  // Example: filter reservasPorMes by month filter
-  if (filters.value.month) {
-    filtered.reservasPorMes = {};
-    for (const [mes, count] of Object.entries(reports.reservasPorMes)) {
-      if (mes === filters.value.month) {
-        filtered.reservasPorMes[mes] = count;
-      }
-    }
-  } else {
-    filtered.reservasPorMes = { ...reports.reservasPorMes };
-  }
-
-  // TODO: Add filtering by year, brand, date as per your data structure
-
-  filteredReports.value = filtered;
+function resetFilters() {
+  filters.value = {
+    month: '',
+    year: '',
+    brand: '',
+    date: '',
+  };
+  applyFilters();
 }
 
 function printReport() {
