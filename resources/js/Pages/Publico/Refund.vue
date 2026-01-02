@@ -72,6 +72,6 @@
 </template>
 
 <script setup>
-import AuthLayout from '@/Layouts/AuthLayout.vue'
-defineOptions({ layout: AuthLayout })
+import GuestLayout from '@/Layouts/GuestLayout.vue'
+defineOptions({ layout: GuestLayout })
 </script>

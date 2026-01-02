@@ -11,7 +11,8 @@
 </template>
 
 <script setup>
-// Add any script logic here if needed in the future
+import GuestLayout from '@/Layouts/GuestLayout.vue';
+defineOptions({ layout: GuestLayout });
 </script>
 
 <style scoped>

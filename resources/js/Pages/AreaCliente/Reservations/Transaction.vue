@@ -17,10 +17,6 @@ const props = defineProps({
   }
 });
 
-const navigateToPage = (url) => {
-  router.visit(url); // Use router.visit for navigation
-};
-
 onMounted(() => {
   if (!window.paypal) {
     const script = document.createElement('script');

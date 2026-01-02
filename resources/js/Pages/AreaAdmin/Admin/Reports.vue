@@ -4,7 +4,7 @@
     <h1>Relatórios</h1>
 
     <!-- Filters Section -->
-    <div class="flex flex-wrap gap-4 mt-4">
+    <div class="flex flex-wrap gap-4 mt-4 print:hidden">
       <select v-model="filters.month" class="p-2 border rounded">
         <option value="">Mês</option>
         <option v-for="m in months" :key="m.value" :value="m.value">{{ m.text }}</option>
