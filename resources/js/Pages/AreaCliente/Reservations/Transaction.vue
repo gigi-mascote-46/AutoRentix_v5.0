@@ -9,6 +9,7 @@
 <script setup>
 import { onMounted } from 'vue';
 import { router } from '@inertiajs/vue3';
+import axios from 'axios';
 
 const props = defineProps({
   amount: {

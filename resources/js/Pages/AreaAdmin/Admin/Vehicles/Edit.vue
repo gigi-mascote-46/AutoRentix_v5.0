@@ -82,7 +82,12 @@ function handleFileChange(event) {
 }
 
 function submit() {
-  form.put(route('admin.vehicles.update', props.bem.id));
+  // O PHP não processa uploads de ficheiros em pedidos PUT.
+  // Usamos POST com o método spoofing (_method: 'put').
+  form.transform((data) => ({
+    ...data,
+    _method: 'put',
+  })).post(route('admin.vehicles.update', props.bem.id));
 }
 </script>
 

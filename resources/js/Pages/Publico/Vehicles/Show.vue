@@ -63,7 +63,7 @@
                             </div>
                             <div class="text-right">
                                 <div class="text-3xl font-bold text-user-primary">
-                                    {{ Number(bem.preco_por_dia ?? bem.preco_por_dia).toFixed(2) }}€
+                                    {{ Number(bem.preco_diario ?? 0).toFixed(2) }}€
                                 </div>
                                 <p class="text-gray-500">por dia</p>
                             </div>
